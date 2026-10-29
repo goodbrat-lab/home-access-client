@@ -1,4 +1,4 @@
-﻿# ====================================================================
+# ====================================================================
 # Automated Installer: Secure Remote Access Client (wstunnel + WireGuard)
 # Repository: https://github.com/goodbrat-lab/home-access-client
 # ====================================================================
@@ -27,7 +27,7 @@ if (-not (Test-Path $targetDir)) {
 }
 
 # 4. Download Files from GitHub Release (with raw fallback)
-$releaseBase = "https://github.com/goodbrat-lab/home-access-client/releases/download/v1.0.0"
+$releaseBase = "https://github.com/goodbrat-lab/home-access-client/releases/download/v1.0.1"
 $rawBase = "https://raw.githubusercontent.com/goodbrat-lab/home-access-client/main"
 
 function Download-Asset {
@@ -156,16 +156,17 @@ try {
 
     $ms = [System.IO.MemoryStream]::new($cipherBytes)
     $cs = [System.Security.Cryptography.CryptoStream]::new($ms, $aes.CreateDecryptor(), [System.Security.Cryptography.CryptoStreamMode]::Read)
-    $reader = [System.IO.StreamReader]::new($cs, [System.Text.Encoding]::UTF8)
+    $reader = [System.IO.StreamReader]::new($cs, (New-Object System.Text.UTF8Encoding($false)))
     $decryptedText = $reader.ReadToEnd()
     $cs.Close()
     $ms.Close()
 
     $confPath = "$targetDir\wireguard-client.conf"
-    [System.IO.File]::WriteAllText($confPath, $decryptedText, [System.Text.Encoding]::UTF8)
+    # Write UTF-8 without BOM so WireGuard parser does not fail on \ufeff
+    [System.IO.File]::WriteAllText($confPath, $decryptedText, (New-Object System.Text.UTF8Encoding($false)))
     
-    # Restrict permissions with icacls (current user only)
-    icacls $confPath /inheritance:r /grant:r "$($env:USERNAME):(R,W)" | Out-Null
+    # Restrict permissions with icacls: current user (R,W), SYSTEM *S-1-5-18 (R), Administrators *S-1-5-32-544 (F)
+    icacls $confPath /inheritance:r /grant:r "$($env:USERNAME):(R,W)" "*S-1-5-18:(R)" "*S-1-5-32-544:(F)" | Out-Null
     Write-Host " OK" -ForegroundColor Green
 } catch {
     Write-Host " FAILED" -ForegroundColor Red
@@ -196,7 +197,7 @@ Start-Sleep -Seconds 1
 
 Start-Process -WindowStyle Hidden -FilePath "$targetDir\wstunnel.exe" -ArgumentList @(
     "client",
-    "-L", "udp://51820:localhost:51820?timeout_sec=0",
+    "-L", "udp://0.0.0.0:51820:localhost:51820?timeout_sec=0",
     "-p", $proxyUrl,
     "wss://home.guseynovia.ru:443"
 )
@@ -217,17 +218,20 @@ if (-not $wgService -or $wgService.Status -ne 'Running') {
 
 # 11. Connectivity check
 Write-Host "[*] Testing connectivity to home infrastructure..." -ForegroundColor Cyan
+$tcpServer = Test-NetConnection 10.10.10.1 -Port 22 -InformationLevel Quiet
 $pingServer = Test-Connection -ComputerName 10.10.10.1 -Count 3 -Quiet
 $pingMiniPC = Test-Connection -ComputerName 192.168.1.229 -Count 3 -Quiet
 
-if ($pingServer -and $pingMiniPC) {
+# Consider success when TCP port 22 connects (even if ICMP ping is blocked by Windows Firewall in Public profile)
+if ($tcpServer -or ($pingServer -and $pingMiniPC)) {
     Write-Host ""
     Write-Host "==========================================================" -ForegroundColor Green
     Write-Host "                CONNECTION OK                            " -ForegroundColor Green
     Write-Host "==========================================================" -ForegroundColor Green
     Write-Host "WireGuard tunnel is active and routing successfully!" -ForegroundColor Green
-    Write-Host "- WireGuard Server (10.10.10.1): REACHABLE" -ForegroundColor Green
-    Write-Host "- Mini-PC LAN (192.168.1.229):   REACHABLE" -ForegroundColor Green
+    Write-Host "- WireGuard Server TCP/22 (10.10.10.1): $(if ($tcpServer) { 'REACHABLE' } else { 'UNREACHABLE' })" -ForegroundColor $(if ($tcpServer) { 'Green' } else { 'Yellow' })
+    Write-Host "- WireGuard Server Ping (10.10.10.1):   $(if ($pingServer) { 'REACHABLE' } else { 'BLOCKED (Public profile / ICMP filter)' })" -ForegroundColor $(if ($pingServer) { 'Green' } else { 'Yellow' })
+    Write-Host "- Mini-PC LAN Ping (192.168.1.229):     $(if ($pingMiniPC) { 'REACHABLE' } else { 'BLOCKED / UNREACHABLE' })" -ForegroundColor $(if ($pingMiniPC) { 'Green' } else { 'Yellow' })
     Write-Host ""
     Write-Host "Files installed at: $targetDir" -ForegroundColor Gray
     Write-Host "To stop the tunnel later, run:" -ForegroundColor Gray
@@ -238,15 +242,16 @@ if ($pingServer -and $pingMiniPC) {
     Write-Host "==========================================================" -ForegroundColor Yellow
     Write-Host "              CONNECTION DIAGNOSTICS                      " -ForegroundColor Yellow
     Write-Host "==========================================================" -ForegroundColor Yellow
+    Write-Host "TCP 10.10.10.1:22:  $(if ($tcpServer) { 'OK' } else { 'FAIL' })" -ForegroundColor $(if ($tcpServer) { 'Green' } else { 'Red' })
     Write-Host "Ping 10.10.10.1:    $(if ($pingServer) { 'OK' } else { 'FAIL' })" -ForegroundColor $(if ($pingServer) { 'Green' } else { 'Red' })
     Write-Host "Ping 192.168.1.229: $(if ($pingMiniPC) { 'OK' } else { 'FAIL' })" -ForegroundColor $(if ($pingMiniPC) { 'Green' } else { 'Red' })
     Write-Host ""
     Write-Host "Troubleshooting steps:" -ForegroundColor Cyan
     Write-Host "1. Check wstunnel output in visible window:"
     Write-Host "   & '$targetDir\start-wstunnel.bat'"
-    Write-Host "2. If 'certificate verify failed', edit start-wstunnel.bat and add: --tls-verify-certificate=false"
+    Write-Host "2. If 'certificate verify failed', check proxy TLS inspection."
     Write-Host "3. Check WireGuard log:"
     Write-Host "   & '$wgExe' /dumplog"
-    Write-Host "4. Check proxy CONNECT directly:"
-    Write-Host "   curl.exe -x $proxyUrl -I https://home.guseynovia.ru"
+    Write-Host "4. If TCP works but ping fails, switch profile to Private:"
+    Write-Host "   Set-NetConnectionProfile -InterfaceAlias wireguard-client -NetworkCategory Private"
 }
