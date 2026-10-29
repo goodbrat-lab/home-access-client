@@ -105,6 +105,37 @@ AllowedIPs = 0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/
 | `128.0.0.0/1` | `128.0.0.0` – `255.255.255.255` | В интернет (включая домашнюю LAN `192.168.1.0/24` и DNS `1.1.1.1`) |
 | `10.10.10.0/24` | `10.10.10.0` – `10.10.10.255` | **Явное включение** подсети WireGuard-сервера с маской `/24` |
 
+### 5.1. Настройка ProxyOverride для браузеров (Chrome, Edge)
+По умолчанию Windows и браузеры на базе Chromium перенаправляют все HTTP/HTTPS-запросы на системный корпоративный прокси (`10.26.254.42:3128`), игнорируя системные маршруты WireGuard. Поскольку корпоративный прокси не знает о домашних адресах (`192.168.1.*`, `10.10.10.*`) и блокирует YouTube, трафик к ним должен идти в обход прокси — напрямую через интерфейс WireGuard.
+
+Начиная с **v1.0.2**, скрипт `install.ps1` автоматически конфигурирует исключения в реестре Windows с сохранением резервной копии исходного значения в `$env:USERPROFILE\wstunnel\proxy-override-backup.txt`:
+
+* **Ручная настройка исключений в PowerShell:**
+  ```powershell
+  $regKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+  $currentOverride = (Get-ItemProperty -Path $regKey).ProxyOverride
+  $add = "192.168.1.*;10.10.10.*;*.youtube.com;*.googlevideo.com;*.ytimg.com"
+  $newOverride = if ([string]::IsNullOrWhiteSpace($currentOverride)) { $add } else { "$currentOverride;$add" }
+  Set-ItemProperty -Path $regKey -Name ProxyOverride -Value $newOverride
+  ```
+
+* **Откат ProxyOverride к исходному состоянию (до установки):**
+  ```powershell
+  $backupPath = "$env:USERPROFILE\wstunnel\proxy-override-backup.txt"
+  if (Test-Path $backupPath) {
+      $original = Get-Content $backupPath -Raw
+      Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -Name ProxyOverride -Value $original
+      Write-Host "ProxyOverride восстановлен из бэкапа." -ForegroundColor Green
+  }
+  ```
+
+### 5.2. Настройки браузера: YouTube, FakeIP и отключение QUIC
+1. **Отключение протокола QUIC (HTTP/3):**
+   * Браузеры по умолчанию пытаются открывать YouTube и сервисы Google по протоколу QUIC поверх UDP/443. В корпоративных сетях исходящий UDP/443 часто фильтруется или дропается прокси/файрволом, что приводит к долгой буферизации или ошибке загрузки видео.
+   * **Решение:** Откройте в Chrome / Edge страницу `chrome://flags/#enable-quic`, переведите флаг **Experimental QUIC protocol** в положение **Disabled** и перезапустите браузер (кнопка *Relaunch*). Браузер переключится на TCP TLS (HTTP/2), который прозрачно обрабатывается TPROXY `sing-box` на домашнем роутере.
+2. **Разрешение доступа к локальной сети (Chrome 142+):**
+   * В последних версиях Chromium включена защита *Private Network Access (Local Network Access)*. При первом открытии веб-интерфейса домашнего роутера (`http://192.168.1.1/`) браузер может запросить явное подтверждение доступа во всплывающем окне — нажмите **Allow** (Разрешить).
+
 ---
 
 ## 6. Проверка после установки
@@ -181,3 +212,27 @@ Register-ScheduledTask -TaskName "wstunnel-client" -Action $action -Trigger $tri
 ```powershell
 Unregister-ScheduledTask -TaskName "wstunnel-client" -Confirm:$false
 ```
+
+---
+
+## 10. Регламент ротации секретов и безопасность
+
+Для обеспечения долгосрочной безопасности инфраструктуры после тестирования и отладки рекомендуется выполнить плановую ротацию ключевых учетных данных:
+
+1. **Пароль PPPoE провайдера (Ростелеком):**
+   * Расположение: `/etc/config/network` (секция `config interface 'wan'`) на роутере OpenWrt.
+   * Процедура: смените пароль в личном кабинете провайдера и обновите опцию `option password` через LuCI (`Сеть -> Интерфейсы -> WAN`) либо `uci set network.wan.password='...' && uci commit network && /etc/init.d/network restart`.
+2. **Пароль клиента Sirin VPN (sing-box outbound):**
+   * Расположение: `/etc/sirin/client.toml` и конфигурация `sing-box` на роутере OpenWrt.
+   * Процедура: сгенерируйте новый токен/пароль на внешнем сервере выхода (Нидерланды) и синхронизируйте его на роутере с перезапуском сервиса `sirin-client` (`service sirin restart`).
+3. **UUID для VLESS / Shadowsocks:**
+   * Расположение: конфигурация upstream-прокси (`media.guseynovia.ru`).
+   * Процедура: сгенерируйте новый UUID (`uuidgen` в Linux / `[Guid]::NewGuid()` в PowerShell) на стороне VLESS-сервера и обновите клиентский outbound в `/etc/sing-box/config.json`.
+4. **Пароль панели управления CRP:**
+   * Расположение: веб-интерфейс панели управления на `crp.guseynovia.ru`.
+   * Процедура: смените пароль учетной записи администратора в настройках безопасности панели.
+5. **Приватные ключи WireGuard (`client.key`, `server.key`):**
+   * Расположение: `~/wg-keys/` на мини-ПК, `/etc/wireguard/wg0.conf`.
+   * Процедура: при компрометации клиента сгенерируйте новую пару ключей (`wg genkey | tee client.key | wg pubkey > client.pub`), обновите `PublicKey` пира на сервере и перевыпустите зашифрованный `config.enc`.
+6. **Пароль расшифровки конфигурации (`WG_PASS`):**
+   * Не передавайте пароль шифрования в открытом виде по незащищённым каналам. Переменная окружения `$env:WG_PASS` автоматически выгружается из памяти скриптом `install.ps1` сразу после расшифровки.

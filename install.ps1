@@ -211,7 +211,31 @@ Start-Process -WindowStyle Hidden -FilePath "$targetDir\wstunnel.exe" -ArgumentL
 Write-Host "[*] Waiting 5 seconds for tunnel negotiation..."
 Start-Sleep -Seconds 5
 
-# 10. Verification of processes and services
+# 10. Configure ProxyOverride for direct routing of LAN and bypass domains
+Write-Host "[*] Configuring ProxyOverride for browser bypass..."
+try {
+    $regKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+    $currentOverride = (Get-ItemProperty -Path $regKey -ErrorAction SilentlyContinue).ProxyOverride
+    if (-not [string]::IsNullOrWhiteSpace($currentOverride)) {
+        [System.IO.File]::WriteAllText("$targetDir\proxy-override-backup.txt", $currentOverride)
+    }
+    $bypassList = "192.168.1.*;10.10.10.*;*.youtube.com;*.googlevideo.com;*.ytimg.com"
+    $newOverride = if ([string]::IsNullOrWhiteSpace($currentOverride)) {
+        $bypassList
+    } else {
+        $parts = $currentOverride -split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
+        foreach ($b in ($bypassList -split ';')) {
+            if ($parts -notcontains $b) { $parts += $b }
+        }
+        $parts -join ';'
+    }
+    Set-ItemProperty -Path $regKey -Name ProxyOverride -Value $newOverride
+    Write-Host "[*] ProxyOverride configured (backup saved to proxy-override-backup.txt)." -ForegroundColor Green
+} catch {
+    Write-Host "[WARNING] Could not set ProxyOverride: $_" -ForegroundColor Yellow
+}
+
+# 11. Verification of processes and services
 $wstunnelProc = Get-Process wstunnel -ErrorAction SilentlyContinue
 $wgService = Get-Service -Name "WireGuardTunnel`$$tunnelName" -ErrorAction SilentlyContinue
 
@@ -222,7 +246,7 @@ if (-not $wgService -or $wgService.Status -ne 'Running') {
     Write-Host "[WARNING] WireGuard tunnel service is not in 'Running' state." -ForegroundColor Yellow
 }
 
-# 11. Connectivity check
+# 12. Connectivity check
 Write-Host "[*] Testing connectivity to home infrastructure..." -ForegroundColor Cyan
 $tcpServer = Test-NetConnection 10.10.10.1 -Port 22 -InformationLevel Quiet
 $pingServer = Test-Connection -ComputerName 10.10.10.1 -Count 3 -Quiet
