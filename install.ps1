@@ -27,7 +27,7 @@ if (-not (Test-Path $targetDir)) {
 }
 
 # 4. Download Files from GitHub Release (with raw fallback)
-$releaseBase = "https://github.com/goodbrat-lab/home-access-client/releases/download/v1.0.1"
+$releaseBase = "https://github.com/goodbrat-lab/home-access-client/releases/download/v1.0.2"
 $rawBase = "https://raw.githubusercontent.com/goodbrat-lab/home-access-client/main"
 
 function Download-Asset {
@@ -160,6 +160,12 @@ try {
     $decryptedText = $reader.ReadToEnd()
     $cs.Close()
     $ms.Close()
+
+    # Ensure full-tunnel routing (0.0.0.0/0 excluding corporate 10.0.0.0/8)
+    $fullTunnelAllowedIPs = "AllowedIPs = 0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/3, 64.0.0.0/2, 128.0.0.0/1, 10.10.10.0/24"
+    if ($decryptedText -match 'AllowedIPs\s*=') {
+        $decryptedText = $decryptedText -replace 'AllowedIPs\s*=.*', $fullTunnelAllowedIPs
+    }
 
     $confPath = "$targetDir\wireguard-client.conf"
     # Write UTF-8 without BOM so WireGuard parser does not fail on \ufeff
