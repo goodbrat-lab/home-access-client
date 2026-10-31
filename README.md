@@ -1,8 +1,8 @@
-# Secure Remote Access Client Bundle (v1.0.2)
+# Secure Remote Access Client Bundle (v1.0.3)
 
 Клиентский пакет для защищённого удалённого доступа к домашней инфраструктуре из корпоративной сети через корпоративный HTTP-прокси (`10.26.254.42:3128`) с маскировкой под HTTPS/WebSocket (`wstunnel`) и туннелированием WireGuard.
 
-[![Release](https://img.shields.io/github/v/release/goodbrat-lab/home-access-client)](https://github.com/goodbrat-lab/home-access-client/releases/tag/v1.0.2)
+[![Release](https://img.shields.io/github/v/release/goodbrat-lab/home-access-client)](https://github.com/goodbrat-lab/home-access-client/releases/tag/v1.0.3)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
@@ -27,6 +27,9 @@ Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goo
 ```
 
 Пароль шифрования считывается из переменной окружения `$env:WG_PASS` и сразу удаляется из памяти после расшифровки.
+
+> **Примечание к релизу v1.0.3 (Ротация ключей):**  
+> В версии **v1.0.3** проведена плановая ротация ключей WireGuard для рабочего ПК (`PrivateKey`, `PublicKey`, `PresharedKey`). Файл `config.enc` перевыпущен и зашифрован новым мастер-паролем, а контрольная сумма `config.sha256` обновлена. Предыдущие пароли дешифрования больше не действуют.
 
 ---
 
