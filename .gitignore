@@ -1,0 +1,7 @@
+*.conf
+*.key
+*.pem
+*password*
+.env
+secrets/
+certs/

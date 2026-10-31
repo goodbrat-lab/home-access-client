@@ -1,8 +1,8 @@
-# Secure Remote Access Client Bundle (v1.0.3)
+# Secure Remote Access Client Bundle (v1.0.4)
 
-Клиентский пакет для защищённого удалённого доступа к домашней инфраструктуре из корпоративной сети через корпоративный HTTP-прокси (`10.26.254.42:3128`) с маскировкой под HTTPS/WebSocket (`wstunnel`) и туннелированием WireGuard.
+Клиентский пакет для защищённого удалённого доступа к домашней инфраструктуре из корпоративной сети через корпоративный HTTP-прокси (`YOUR_PROXY_IP:PORT`) с маскировкой под HTTPS/WebSocket (`wstunnel`) и туннелированием WireGuard.
 
-[![Release](https://img.shields.io/github/v/release/goodbrat-lab/home-access-client)](https://github.com/goodbrat-lab/home-access-client/releases/tag/v1.0.3)
+[![Release](https://img.shields.io/github/v/release/goodbrat-lab/home-access-client)](https://github.com/goodbrat-lab/home-access-client/releases/tag/v1.0.4)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
@@ -23,10 +23,13 @@
 
 ```powershell
 $env:WG_PASS = "ВАШ_ПАРОЛЬ_ШИФРОВАНИЯ"
-Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goodbrat-lab/home-access-client/main/install.ps1" -Proxy "http://10.26.254.42:3128" -UseBasicParsing).Content
+Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/goodbrat-lab/home-access-client/main/install.ps1" -Proxy "http://YOUR_PROXY_IP:PORT" -UseBasicParsing).Content
 ```
 
 Пароль шифрования считывается из переменной окружения `$env:WG_PASS` и сразу удаляется из памяти после расшифровки.
+
+> **Примечание к релизу v1.0.4 (Аудит безопасности):**  
+> В версии **v1.0.4** выполнены рекомендации аудита безопасности: привязка локального сокета wstunnel к интерфейсу `127.0.0.1:51820`, удаление корпоративных адресов из документации, добавлены политики `SECURITY.md`, `.gitignore` и лицензия `LICENSE`.
 
 > **Примечание к релизу v1.0.3 (Ротация ключей):**  
 > В версии **v1.0.3** проведена плановая ротация ключей WireGuard для рабочего ПК (`PrivateKey`, `PublicKey`, `PresharedKey`). Файл `config.enc` перевыпущен и зашифрован новым мастер-паролем, а контрольная сумма `config.sha256` обновлена. Предыдущие пароли дешифрования больше не действуют.
@@ -89,7 +92,7 @@ $$\text{WireGuard (IP/UDP)} \longrightarrow \text{WebSocket binary frame} \longr
 ### Обоснование разбиения AllowedIPs
 В синтаксисе WireGuard для Windows отсутствует оператор исключения (отрицания `!`). Запись вида `AllowedIPs = 0.0.0.0/0, !10.0.0.0/8` не поддерживается драйвером `wireguard.exe` и вызывает фатальную ошибку конфигурации.
 
-Чтобы направить **весь интернет в туннель**, но гарантировать, что корпоративный трафик (включая прокси-сервер `10.26.254.42`) пойдёт напрямую через физическую сеть офиса, адресное пространство `0.0.0.0/0` математически разбито на смежные подсети без диапазона `10.0.0.0/8`:
+Чтобы направить **весь интернет в туннель**, но гарантировать, что корпоративный трафик (включая прокси-сервер `YOUR_PROXY_IP`) пойдёт напрямую через физическую сеть офиса, адресное пространство `0.0.0.0/0` математически разбито на смежные подсети без диапазона `10.0.0.0/8`:
 
 ```ini
 AllowedIPs = 0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/3, 64.0.0.0/2, 128.0.0.0/1, 10.10.10.0/24
@@ -99,7 +102,7 @@ AllowedIPs = 0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/
 | :--- | :--- | :--- |
 | `0.0.0.0/5` | `0.0.0.0` – `7.255.255.255` | В интернет через туннель |
 | `8.0.0.0/7` | `8.0.0.0` – `9.255.255.255` | В интернет через туннель (DNS 8.8.8.8) |
-| — | `10.0.0.0` – `10.255.255.255` | **ИСКЛЮЧЕНО** (корпоративная сеть и прокси `10.26.254.42` напрямую) |
+| — | `10.0.0.0` – `10.255.255.255` | **ИСКЛЮЧЕНО** (корпоративная сеть и прокси `YOUR_PROXY_IP` напрямую) |
 | `11.0.0.0/8` | `11.0.0.0` – `11.255.255.255` | В интернет через туннель |
 | `12.0.0.0/6` | `12.0.0.0` – `15.255.255.255` | В интернет через туннель |
 | `16.0.0.0/4` | `16.0.0.0` – `31.255.255.255` | В интернет через туннель |
@@ -109,7 +112,7 @@ AllowedIPs = 0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/
 | `10.10.10.0/24` | `10.10.10.0` – `10.10.10.255` | **Явное включение** подсети WireGuard-сервера с маской `/24` |
 
 ### 5.1. Настройка ProxyOverride для браузеров (Chrome, Edge)
-По умолчанию Windows и браузеры на базе Chromium перенаправляют все HTTP/HTTPS-запросы на системный корпоративный прокси (`10.26.254.42:3128`), игнорируя системные маршруты WireGuard. Поскольку корпоративный прокси не знает о домашних адресах (`192.168.1.*`, `10.10.10.*`) и блокирует YouTube, трафик к ним должен идти в обход прокси — напрямую через интерфейс WireGuard.
+По умолчанию Windows и браузеры на базе Chromium перенаправляют все HTTP/HTTPS-запросы на системный корпоративный прокси (`YOUR_PROXY_IP:PORT`), игнорируя системные маршруты WireGuard. Поскольку корпоративный прокси не знает о домашних адресах (`192.168.1.*`, `10.10.10.*`) и блокирует YouTube, трафик к ним должен идти в обход прокси — напрямую через интерфейс WireGuard.
 
 Начиная с **v1.0.2**, скрипт `install.ps1` автоматически конфигурирует исключения в реестре Windows с сохранением резервной копии исходного значения в `$env:USERPROFILE\wstunnel\proxy-override-backup.txt`:
 
@@ -149,8 +152,8 @@ AllowedIPs = 0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/
 
 | Тест / Команда | Ожидаемый результат | Что проверяется |
 | :--- | :--- | :--- |
-| `ping -n 2 10.26.254.42` | **0% потерь** | Корпоративный прокси доступен напрямую в обход туннеля |
-| `curl.exe -x http://10.26.254.42:3128 -I https://home.guseynovia.ru` | **HTTP 200 / 400** | Соединение с внешним wstunnel через прокси работает |
+| `ping -n 2 YOUR_PROXY_IP` | **0% потерь** | Корпоративный прокси доступен напрямую в обход туннеля |
+| `curl.exe -x http://YOUR_PROXY_IP:PORT -I https://home.guseynovia.ru` | **HTTP 200 / 400** | Соединение с внешним wstunnel через прокси работает |
 | `curl.exe -s https://ifconfig.me` | **`94.183.159.114`** | Внешний интернет идет через VPN (Нидерланды / sirin0) |
 | `curl.exe -s -o NUL -w "%{http_code}" https://www.google.com` | **200** | Google доступен через туннель sirin0 |
 | `curl.exe -s -o NUL -w "%{http_code}" https://www.youtube.com` | **200** | YouTube доступен через туннель и TPROXY sing-box |
@@ -205,7 +208,7 @@ AllowedIPs = 0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/
 Чтобы туннель wstunnel автоматически стартовал при входе пользователя в систему (поскольку служба WireGuard стартует автоматически как служба Windows `WireGuardTunnel$wireguard-client`), выполните в **PowerShell от имени администратора**:
 
 ```powershell
-$action = New-ScheduledTaskAction -Execute "$env:USERPROFILE\wstunnel\wstunnel.exe" -Argument 'client --log-lvl INFO -L "udp://0.0.0.0:51820:localhost:51820?timeout_sec=0" -p http://10.26.254.42:3128 wss://home.guseynovia.ru:443'
+$action = New-ScheduledTaskAction -Execute "$env:USERPROFILE\wstunnel\wstunnel.exe" -Argument 'client --log-lvl INFO -L "udp://127.0.0.1:51820:localhost:51820?timeout_sec=0" -p http://YOUR_PROXY_IP:PORT wss://home.guseynovia.ru:443'
 $trigger = New-ScheduledTaskTrigger -AtLogOn
 $principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -RunLevel Highest
 Register-ScheduledTask -TaskName "wstunnel-client" -Action $action -Trigger $trigger -Principal $principal -Description "wstunnel client for home access"

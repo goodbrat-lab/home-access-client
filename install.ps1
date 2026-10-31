@@ -203,7 +203,7 @@ Start-Sleep -Seconds 1
 
 Start-Process -WindowStyle Hidden -FilePath "$targetDir\wstunnel.exe" -ArgumentList @(
     "client",
-    "-L", "udp://0.0.0.0:51820:localhost:51820?timeout_sec=0",
+    "-L", "udp://127.0.0.1:51820:localhost:51820?timeout_sec=0",
     "-p", $proxyUrl,
     "wss://home.guseynovia.ru:443"
 )
