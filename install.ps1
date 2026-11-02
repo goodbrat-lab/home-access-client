@@ -3,12 +3,20 @@
 # Repository: https://github.com/goodbrat-lab/home-access-client
 # ====================================================================
 
+function Exit-Script {
+    param([int]$ExitCode = 1)
+    Write-Host ""
+    Write-Host "Нажмите Enter для завершения..." -ForegroundColor Yellow
+    try { [void][System.Console]::ReadLine() } catch {}
+    exit $ExitCode
+}
+
 # 1. Administrator Check
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isAdmin) {
     Write-Host "[ERROR] This installer MUST be executed with Administrator privileges." -ForegroundColor Red
     Write-Host "Please right-click Start -> 'Terminal (Administrator)' or 'PowerShell (Run as administrator)' and re-run." -ForegroundColor Yellow
-    exit 1
+    Exit-Script 1
 }
 
 # 2. Proxy Setup for current session
@@ -26,15 +34,15 @@ if (-not (Test-Path $targetDir)) {
     New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
 }
 
-# 4. Download Files from GitHub Release (with raw fallback)
-$releaseBase = "https://github.com/goodbrat-lab/home-access-client/releases/download/v1.0.2"
+# 4. Download Files from GitHub Repository (raw primary, release fallback)
 $rawBase = "https://raw.githubusercontent.com/goodbrat-lab/home-access-client/main"
+$releaseBase = "https://github.com/goodbrat-lab/home-access-client/releases/latest/download"
 
 function Download-Asset {
     param([string]$FileName, [string]$OutPath)
     Write-Host "[*] Downloading $FileName..." -NoNewline
     $success = $false
-    foreach ($url in @("$releaseBase/$FileName", "$rawBase/$FileName")) {
+    foreach ($url in @("$rawBase/$FileName", "$releaseBase/$FileName")) {
         try {
             Invoke-WebRequest -Uri $url -OutFile $OutPath -Proxy $proxyUrl -UseBasicParsing -TimeoutSec 30 -ErrorAction Stop
             $success = $true
@@ -64,7 +72,7 @@ $actualHash = [System.BitConverter]::ToString($actualHashBytes).Replace('-', '')
 if ($expectedHash -ne $actualHash) {
     Write-Host " INTEGRITY ERROR" -ForegroundColor Red
     Write-Error "SHA-256 mismatch for config.enc! Downloaded: $actualHash, Expected: $expectedHash"
-    exit 1
+    Exit-Script 1
 }
 Write-Host " OK (SHA-256 verified)" -ForegroundColor Green
 
@@ -96,7 +104,7 @@ if (-not (Test-Path $wgExe)) {
     
     if (-not (Test-Path $wgExe)) {
         Write-Host "[ERROR] WireGuard installation failed or pending UAC approval. Please install WireGuard from https://www.wireguard.com/install/ manually and re-run this script." -ForegroundColor Red
-        exit 1
+        Exit-Script 1
     }
     Write-Host "[*] WireGuard installed successfully." -ForegroundColor Green
 } else {
@@ -107,7 +115,7 @@ if (-not (Test-Path $wgExe)) {
 $password = $env:WG_PASS
 if ([string]::IsNullOrWhiteSpace($password)) {
     Write-Host "[ERROR] Environment variable WG_PASS is missing or empty! Decryption cannot proceed." -ForegroundColor Red
-    exit 1
+    Exit-Script 1
 }
 
 Write-Host "[*] Decrypting WireGuard configuration..." -NoNewline
@@ -177,7 +185,7 @@ try {
 } catch {
     Write-Host " FAILED" -ForegroundColor Red
     Write-Error "Decryption failed: $_"
-    exit 1
+    Exit-Script 1
 } finally {
     Remove-Item Env:\WG_PASS -ErrorAction SilentlyContinue
 }
