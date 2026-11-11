@@ -23,11 +23,14 @@ jobs:
         with:
           version: 0.13.0
 
-      - name: Install cargo-zigbuild and upx
-        run: |
-          sudo apt-get update && sudo apt-get install -y upx
-          pipx install cargo-zigbuild
-          rustup target add mipsel-unknown-linux-musl
+      - name: Install upx
+        run: sudo apt-get update && sudo apt-get install -y upx
+
+      - name: Install cargo-zigbuild
+        run: pipx install cargo-zigbuild
+
+      - name: Add rust target
+        run: rustup target add mipsel-unknown-linux-musl
 
       - name: Build wstunnel with cargo-zigbuild
         run: |
