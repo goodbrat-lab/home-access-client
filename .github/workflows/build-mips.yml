@@ -36,7 +36,7 @@ jobs:
           (
             echo "=== INSTALL SYSTEM PACKAGES ==="
             apt-get update
-            apt-get install -y zstd curl tar build-essential
+            apt-get install -y zstd curl tar build-essential upx
             
             echo "=== DOWNLOAD OFFICIAL OPENWRT 25.12.6 TOOLCHAIN ==="
             mkdir -p /opt
@@ -46,24 +46,15 @@ jobs:
 
             TOOLCHAIN_ROOT=$(find /opt -maxdepth 1 -type d -name "openwrt-toolchain*")
             export STAGING_DIR="$TOOLCHAIN_ROOT"
-            echo "STAGING_DIR: $STAGING_DIR"
 
             TOOLCHAIN_GCC=$(find /opt -name "*mips*gcc" | head -n 1)
-            echo "Selected GCC: $TOOLCHAIN_GCC"
             TOOLCHAIN_BIN=$(dirname "$TOOLCHAIN_GCC")
             GCC_NAME=$(basename "$TOOLCHAIN_GCC")
             TARGET_PREFIX=${GCC_NAME%-gcc}
-            echo "Target prefix: $TARGET_PREFIX"
-            echo "Toolchain bin: $TOOLCHAIN_BIN"
 
             CRT_FILE=$(find /opt -name "crt1.o" | head -n 1)
-            echo "Found crt1.o at: $CRT_FILE"
             if [ -n "$CRT_FILE" ]; then
               CRT_DIR=$(dirname "$CRT_FILE")
-              LIBGCC_EH=$(find /opt -name "libgcc_eh.a" | head -n 1)
-              if [ -n "$LIBGCC_EH" ]; then
-                ln -sf "$LIBGCC_EH" "$CRT_DIR/libunwind.a" || true
-              fi
             fi
 
             echo "=== INSTALL RUST NIGHTLY ==="
@@ -75,7 +66,6 @@ jobs:
             export STRIP="$TOOLCHAIN_BIN/${TARGET_PREFIX}-strip"
             export CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_MUSL_LINKER="$TOOLCHAIN_GCC"
             
-            # Use dynamic linking against OpenWrt musl libc
             if [ -n "$CRT_DIR" ]; then
               export RUSTFLAGS="-C target-cpu=mips32r2 -C target-feature=-crt-static -C link-arg=-s -C link-arg=-L$CRT_DIR"
             else
@@ -90,6 +80,10 @@ jobs:
               $STRIP target/mipsel-unknown-linux-musl/release/wstunnel || true
               cp target/mipsel-unknown-linux-musl/release/wstunnel ../output-repo/wstunnel-mipsel
               cd ../output-repo
+              echo "Before UPX:"
+              ls -lh wstunnel-mipsel
+              upx --best wstunnel-mipsel || echo "UPX skipped or not supported"
+              echo "After UPX:"
               ls -lh wstunnel-mipsel
               echo "BUILD SUCCESS"
             else
@@ -107,5 +101,5 @@ jobs:
           git config user.email "actions@github.com"
           git checkout -B release-mips
           git add err.log wstunnel-mipsel || git add err.log
-          git commit -m "Build update: OpenWrt toolchain with STAGING_DIR and dynamic musl" || true
+          git commit -m "Build update: wstunnel with UPX compression" || true
           git push -f origin release-mips
