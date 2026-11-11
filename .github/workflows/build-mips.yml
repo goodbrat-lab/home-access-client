@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: Cross-compile wstunnel v11.1.0 for mipsel static
+    name: Cross-compile wstunnel v11.1.0 for mipsel soft-float musl
     runs-on: ubuntu-latest
     container:
       image: rust:bookworm
@@ -29,20 +29,24 @@ jobs:
         with:
           path: output-repo
 
-      - name: Install compiler and rust-src
+      - name: Install muslsf toolchain and rust-src
         run: |
-          apt-get update
-          apt-get install -y gcc-mipsel-linux-gnu libc6-dev-mipsel-cross
+          mkdir -p /opt
+          curl -sL https://musl.cc/mipsel-linux-muslsf-cross.tgz | tar -xz -C /opt
           rustup toolchain install nightly --component rust-src
 
-      - name: Build static binary with build-std
+      - name: Build static soft-float binary with build-std
         env:
-          CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_GNU_LINKER: mipsel-linux-gnu-gcc
-          RUSTFLAGS: "-C target-feature=+crt-static -C link-arg=-static"
+          PATH: /opt/mipsel-linux-muslsf-cross/bin:/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+          CC_mipsel_unknown_linux_musl: mipsel-linux-muslsf-gcc
+          AR_mipsel_unknown_linux_musl: mipsel-linux-muslsf-ar
+          CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_MUSL_LINKER: mipsel-linux-muslsf-gcc
+          RUSTFLAGS: "-C target-feature=+crt-static,+soft-float -C link-arg=-msoft-float -C link-arg=-s"
         run: |
           cd wstunnel
-          cargo +nightly build -Z build-std=std,panic_abort --release --target mipsel-unknown-linux-gnu --package wstunnel-cli
-          cp target/mipsel-unknown-linux-gnu/release/wstunnel ../output-repo/wstunnel-mipsel
+          cargo +nightly build -Z build-std=std,panic_abort --release --target mipsel-unknown-linux-musl --package wstunnel-cli
+          /opt/mipsel-linux-muslsf-cross/bin/mipsel-linux-muslsf-strip target/mipsel-unknown-linux-musl/release/wstunnel || true
+          cp target/mipsel-unknown-linux-musl/release/wstunnel ../output-repo/wstunnel-mipsel
           cd ../output-repo
           ls -lh wstunnel-mipsel
 
@@ -54,5 +58,5 @@ jobs:
           git config user.email "actions@github.com"
           git checkout -B release-mips
           git add -f wstunnel-mipsel
-          git commit -m "Add compiled static MIPS wstunnel binary"
+          git commit -m "Add compiled static soft-float MIPS wstunnel binary"
           git push -f origin release-mips
