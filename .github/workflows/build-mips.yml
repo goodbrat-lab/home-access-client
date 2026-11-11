@@ -18,19 +18,20 @@ jobs:
           repository: 'erebe/wstunnel'
           ref: 'v11.1.0'
 
+      - name: Setup Rust with target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: mipsel-unknown-linux-musl
+
       - name: Setup Zig
         uses: mlugg/setup-zig@v1
         with:
           version: 0.13.0
 
-      - name: Install upx
-        run: sudo apt-get update && sudo apt-get install -y upx
-
-      - name: Install cargo-zigbuild
-        run: pipx install cargo-zigbuild
-
-      - name: Add rust target
-        run: rustup target add mipsel-unknown-linux-musl
+      - name: Install upx and cargo-zigbuild
+        run: |
+          sudo apt-get update && sudo apt-get install -y upx
+          pipx install cargo-zigbuild
 
       - name: Build wstunnel with cargo-zigbuild
         run: |
