@@ -18,10 +18,10 @@ jobs:
           repository: 'erebe/wstunnel'
           ref: 'v11.1.0'
 
-      - name: Setup Rust with target
-        uses: dtolnay/rust-toolchain@stable
+      - name: Setup Nightly Rust
+        uses: dtolnay/rust-toolchain@nightly
         with:
-          targets: mipsel-unknown-linux-musl
+          components: rust-src
 
       - name: Setup Zig
         uses: mlugg/setup-zig@v1
@@ -35,7 +35,7 @@ jobs:
 
       - name: Build wstunnel with cargo-zigbuild
         run: |
-          cargo zigbuild --release --target mipsel-unknown-linux-musl --package wstunnel-cli
+          cargo zigbuild -Z build-std=std,panic_abort --release --target mipsel-unknown-linux-musl --package wstunnel-cli
           cp target/mipsel-unknown-linux-musl/release/wstunnel ./wstunnel-mipsel
           upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
 
