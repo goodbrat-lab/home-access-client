@@ -21,7 +21,7 @@ jobs:
       - name: Setup Nightly Rust
         uses: dtolnay/rust-toolchain@nightly
         with:
-          components: rust-src
+          targets: mipsel-unknown-linux-musl
 
       - name: Setup Zig
         uses: mlugg/setup-zig@v1
@@ -35,7 +35,7 @@ jobs:
 
       - name: Build wstunnel with cargo-zigbuild
         run: |
-          cargo zigbuild -Z build-std=std,panic_abort --release --target mipsel-unknown-linux-musl --package wstunnel-cli
+          cargo zigbuild --release --target mipsel-unknown-linux-musl --package wstunnel-cli
           cp target/mipsel-unknown-linux-musl/release/wstunnel ./wstunnel-mipsel
           upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
 
