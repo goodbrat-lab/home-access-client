@@ -41,12 +41,15 @@ jobs:
             echo "=== DOWNLOAD OFFICIAL OPENWRT 25.12.6 TOOLCHAIN ==="
             mkdir -p /opt
             curl -fSL https://downloads.openwrt.org/releases/25.12.6/targets/ramips/mt7620/openwrt-toolchain-25.12.6-ramips-mt7620_gcc-14.3.0_musl.Linux-x86_64.tar.zst -o /opt/toolchain.tar.zst
-            ls -lh /opt/toolchain.tar.zst
             tar --zstd -xf /opt/toolchain.tar.zst -C /opt
             rm -f /opt/toolchain.tar.zst
 
-            TOOLCHAIN_GCC=$(find /opt -type f -name "*openwrt-linux*-gcc" | head -n 1)
-            echo "Found GCC: $TOOLCHAIN_GCC"
+            echo "=== INSPECT TOOLCHAIN FILES ==="
+            ls -la /opt
+            find /opt -name "*gcc*" -o -name "*clang*" | head -n 30
+
+            TOOLCHAIN_GCC=$(find /opt -name "*mips*gcc" | head -n 1)
+            echo "Selected GCC: $TOOLCHAIN_GCC"
             TOOLCHAIN_BIN=$(dirname "$TOOLCHAIN_GCC")
             GCC_NAME=$(basename "$TOOLCHAIN_GCC")
             TARGET_PREFIX=${GCC_NAME%-gcc}
@@ -88,5 +91,5 @@ jobs:
           git config user.email "actions@github.com"
           git checkout -B release-mips
           git add err.log wstunnel-mipsel || git add err.log
-          git commit -m "Build update: OpenWrt 25.12.6 toolchain build" || true
+          git commit -m "Build update: OpenWrt toolchain find fix" || true
           git push -f origin release-mips

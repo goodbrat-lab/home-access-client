@@ -1,11 +1,11 @@
-=== INSTALL TOOLS ===
+=== INSTALL SYSTEM PACKAGES ===
 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8790 kB]
 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [366 kB]
-Fetched 9405 kB in 1s (10.2 MB/s)
+Fetched 9405 kB in 1s (9263 kB/s)
 Reading package lists...
 Reading package lists...
 Building dependency tree...
@@ -13,19 +13,32 @@ Reading state information...
 curl is already the newest version (7.88.1-10+deb12u15).
 tar is already the newest version (1.34+dfsg-1.2+deb12u1).
 tar set to manually installed.
-xz-utils is already the newest version (5.4.1-1+deb12u2).
-0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-=== DOWNLOADING TOOLCHAIN ===
+The following NEW packages will be installed:
+  build-essential zstd
+0 upgraded, 2 newly installed, 0 to remove and 0 not upgraded.
+Need to get 708 kB of archives.
+After this operation, 2173 kB of additional disk space will be used.
+Get:1 http://deb.debian.org/debian bookworm/main amd64 build-essential amd64 12.9 [7704 B]
+Get:2 http://deb.debian.org/debian bookworm/main amd64 zstd amd64 1.5.4+dfsg2-5 [701 kB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 708 kB in 0s (11.7 MB/s)
+Selecting previously unselected package build-essential.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 23259 files and directories currently installed.)
+Preparing to unpack .../build-essential_12.9_amd64.deb ...
+Unpacking build-essential (12.9) ...
+Selecting previously unselected package zstd.
+Preparing to unpack .../zstd_1.5.4+dfsg2-5_amd64.deb ...
+Unpacking zstd (1.5.4+dfsg2-5) ...
+Setting up build-essential (12.9) ...
+Setting up zstd (1.5.4+dfsg2-5) ...
+=== DOWNLOAD OFFICIAL OPENWRT 25.12.6 TOOLCHAIN ===
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:03 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:04 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:05 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:06 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:07 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:08 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:09 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:10 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:11 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:12 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:13 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:14 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:15 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:16 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:17 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:18 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:19 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:20 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:21 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:22 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:23 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:24 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:25 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:26 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:27 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:28 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:29 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:30 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:31 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:32 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:33 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:34 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:35 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:36 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:37 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:38 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:39 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:40 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:41 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:42 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:43 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:44 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:45 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:46 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:47 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:48 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:49 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:50 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:51 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:52 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:53 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:54 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:55 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:56 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:57 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:58 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:00:59 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:00 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:01 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:02 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:03 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:04 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:05 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:06 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:07 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:08 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:09 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:10 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:11 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:12 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:13 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:14 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:15 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:16 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:17 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:18 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:19 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:20 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:21 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:22 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:23 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:24 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:25 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:26 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:27 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:28 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:29 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:30 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:31 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:32 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:33 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:34 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:35 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:36 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:37 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:38 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:39 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:40 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:41 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:42 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:43 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:44 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:45 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:46 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:47 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:48 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:49 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:50 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:51 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:52 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:53 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:54 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:55 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:56 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:57 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:58 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:01:59 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:00 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:01 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:02 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:03 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:04 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:05 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:06 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:07 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:08 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:09 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:10 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:11 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:12 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:13 --:--:--     0  0     0    0     0    0     0      0      0 --:--:--  0:02:13 --:--:--     0
-curl: (28) Failed to connect to musl.cc port 443 after 133569 ms: Couldn't connect to server
-ls: cannot access '/opt/toolchain.tgz': No such file or directory
-tar (child): /opt/toolchain.tgz: Cannot open: No such file or directory
-tar (child): Error is not recoverable: exiting now
-tar: Child returned status 2
-tar: Error is not recoverable: exiting now
-ls: cannot access '/opt/mipsel-linux-muslsf-cross/bin': No such file or directory
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  4 44.7M    4 1979k    0     0  3018k      0  0:00:15 --:--:--  0:00:15 3016k  9 44.7M    9 4488k    0     0  2626k      0  0:00:17  0:00:01  0:00:16 2624k 16 44.7M   16 7360k    0     0  2793k      0  0:00:16  0:00:02  0:00:14 2793k 20 44.7M   20 9344k    0     0  2521k      0  0:00:18  0:00:03  0:00:15 2521k 29 44.7M   29 13.1M    0     0  2893k      0  0:00:15  0:00:04  0:00:11 2893k 40 44.7M   40 18.1M    0     0  3307k      0  0:00:13  0:00:05  0:00:08 3345k 51 44.7M   51 23.1M    0     0  3589k      0  0:00:12  0:00:06  0:00:06 3926k 63 44.7M   63 28.2M    0     0  3812k      0  0:00:12  0:00:07  0:00:05 4352k 67 44.7M   67 30.3M    0     0  3547k      0  0:00:12  0:00:08  0:00:04 4301k 78 44.7M   78 35.1M    0     0  3714k      0  0:00:12  0:00:09  0:00:03 4477k 87 44.7M   87 39.1M    0     0  3778k      0  0:00:12  0:00:10  0:00:02 4310k 96 44.7M   96 43.1M    0     0  3618k      0  0:00:12  0:00:12 --:--:-- 3652k100 44.7M  100 44.7M    0     0  3694k      0  0:00:12  0:00:12 --:--:-- 3509k
+-rw-r--r-- 1 root root 45M Nov 11 07:32 /opt/toolchain.tar.zst
+Found GCC: 
+Target prefix: 
+Toolchain bin: .
 === INSTALL RUST NIGHTLY ===
 info: syncing channel updates for nightly-x86_64-unknown-linux-gnu
 info: latest update on 2026-11-11 for version 1.102.0-nightly (9c5648833 2026-11-10)
@@ -33,284 +46,284 @@ info: downloading 4 components
 
   nightly-x86_64-unknown-linux-gnu installed - rustc 1.102.0-nightly (9c5648833 2026-11-10)
 
-=== BUILDING WSTUNNEL ===
+=== BUILDING WSTUNNEL FOR OPENWRT MT7620 ===
     Updating crates.io index
  Downloading crates ...
-  Downloaded futures-sink v0.3.34
   Downloaded futures-macro v0.3.34
+  Downloaded futures-sink v0.3.34
   Downloaded futures-io v0.3.34
-  Downloaded ahash v0.8.12
   Downloaded futures-executor v0.3.34
-  Downloaded http-body-util v0.1.5
-  Downloaded httpdate v1.0.3
-  Downloaded httparse v1.10.1
-  Downloaded async-trait v0.1.92
-  Downloaded hickory-resolver v0.26.3
-  Downloaded http-body v1.1.0
+  Downloaded generic-array v0.14.9
+  Downloaded ahash v0.8.12
   Downloaded is_terminal_polyfill v1.70.2
-  Downloaded lazy_static v1.5.1
-  Downloaded lru-slab v0.1.3
-  Downloaded nix v0.31.3
-  Downloaded nu-ansi-term v0.50.3
-  Downloaded num-integer v0.1.47
-  Downloaded convert_case v0.10.0
-  Downloaded icu_provider v2.3.1
-  Downloaded litemap v0.8.3
-  Downloaded openssl-probe v0.2.1
-  Downloaded base64 v0.21.7
-  Downloaded clap_derive v4.6.7
-  Downloaded subtle v2.6.1
-  Downloaded cfg-if v1.0.5
-  Downloaded cpufeatures v0.3.1
-  Downloaded num_threads v0.1.8
-  Downloaded slab v0.4.12
-  Downloaded base64 v0.22.1
-  Downloaded block-buffer v0.10.4
-  Downloaded cpufeatures v0.2.17
-  Downloaded serde v1.0.229
-  Downloaded bb8 v0.9.1
-  Downloaded bit-vec v0.9.1
-  Downloaded bitflags v2.13.2
-  Downloaded colorchoice v1.0.5
-  Downloaded critical-section v1.2.0
-  Downloaded crossbeam-utils v0.8.23
-  Downloaded crypto-common v0.1.6
-  Downloaded deranged v0.5.9
-  Downloaded dunce v1.0.5
-  Downloaded either v1.19.0
-  Downloaded equivalent v1.0.3
-  Downloaded fnv v1.0.7
-  Downloaded foldhash v0.2.0
-  Downloaded fs_extra v1.3.0
-  Downloaded futures-core v0.3.34
-  Downloaded rustc_version v0.4.1
-  Downloaded cfg_aliases v0.2.2
-  Downloaded clap_lex v1.1.1
-  Downloaded cmake v0.1.58
-  Downloaded concurrent-queue v2.5.0
-  Downloaded fastbloom v0.17.0
-  Downloaded fdlimit v0.3.0
-  Downloaded form_urlencoded v1.2.2
-  Downloaded memoffset v0.9.1
-  Downloaded powerfmt v0.2.1
-  Downloaded inotify-sys v0.1.8
-  Downloaded itoa v1.0.18
-  Downloaded log v0.4.34
-  Downloaded num-conv v0.2.2
-  Downloaded parking v2.2.1
-  Downloaded percent-encoding v2.3.2
-  Downloaded potential_utf v0.1.6
-  Downloaded rand_chacha v0.3.1
-  Downloaded rand_pcg v0.10.2
-  Downloaded ref-cast-impl v1.0.27
-  Downloaded rustls-pki-types v1.15.1
-  Downloaded time-core v0.1.9
-  Downloaded untrusted v0.9.0
-  Downloaded urlencoding v2.1.3
-  Downloaded utf-8 v0.7.6
-  Downloaded displaydoc v0.2.7
-  Downloaded errno v0.3.14
-  Downloaded event-listener-strategy v0.5.4
-  Downloaded find-msvc-tools v0.1.15
   Downloaded heck v0.5.0
-  Downloaded icu_normalizer_data v2.3.0
-  Downloaded idna_adapter v1.2.2
-  Downloaded inotify v0.11.5
-  Downloaded matchers v0.2.0
-  Downloaded notify-types v2.1.0
+  Downloaded http-body v1.1.0
   Downloaded oid-registry v0.8.1
-  Downloaded once_cell v1.21.4
   Downloaded pin-project-internal v1.1.13
-  Downloaded pin-project-lite v0.2.17
-  Downloaded pkg-config v0.3.34
-  Downloaded ppv-lite86 v0.2.21
-  Downloaded quote v1.0.47
-  Downloaded rand_core v0.6.4
-  Downloaded rand_core v0.10.1
+  Downloaded http-body-util v0.1.5
+  Downloaded getrandom v0.3.4
+  Downloaded httparse v1.10.1
+  Downloaded httpdate v1.0.3
+  Downloaded getrandom v0.4.3
+  Downloaded futures-task v0.3.34
+  Downloaded mio v1.2.4
+  Downloaded rand_pcg v0.10.2
+  Downloaded hashbrown v0.17.1
+  Downloaded http v1.5.0
+  Downloaded icu_normalizer_data v2.3.0
+  Downloaded icu_properties v2.3.0
+  Downloaded nom v7.1.3
+  Downloaded icu_locale_core v2.3.0
+  Downloaded openssl-probe v0.2.1
+  Downloaded portable-atomic v1.15.0
+  Downloaded hickory-net v0.26.3
+  Downloaded hickory-resolver v0.26.3
+  Downloaded hyper v1.12.0
+  Downloaded icu_collections v2.3.0
+  Downloaded nu-ansi-term v0.50.3
+  Downloaded once_cell v1.21.4
+  Downloaded memoffset v0.9.1
+  Downloaded urlencoding v2.1.3
+  Downloaded futures-util v0.3.34
+  Downloaded hickory-proto v0.26.3
+  Downloaded icu_properties_data v2.3.0
+  Downloaded lru-slab v0.1.3
+  Downloaded prefix-trie v0.8.4
   Downloaded ref-cast v1.0.27
   Downloaded resolv-conf v0.7.6
-  Downloaded rustc-hash v2.1.3
-  Downloaded same-file v1.0.6
-  Downloaded scopeguard v1.2.0
-  Downloaded serde_regex v1.2.0
-  Downloaded sha1 v0.10.7
-  Downloaded signature v2.2.0
-  Downloaded siphasher v1.0.4
+  Downloaded block-buffer v0.10.4
+  Downloaded parking v2.2.1
+  Downloaded bb8 v0.9.1
+  Downloaded bit-vec v0.9.1
   Downloaded stable_deref_trait v1.2.1
-  Downloaded strsim v0.11.1
-  Downloaded synstructure v0.14.0
-  Downloaded tagptr v0.2.0
-  Downloaded thiserror-impl v2.0.21
-  Downloaded tokio-fd v0.3.0
-  Downloaded tokio-macros v2.7.2
-  Downloaded try-lock v0.2.5
-  Downloaded untrusted v0.7.1
-  Downloaded utf8_iter v1.0.4
-  Downloaded yoke-derive v0.8.4
-  Downloaded zeroize v1.9.1
-  Downloaded zeroize_derive v1.5.0
-  Downloaded asn1-rs-derive v0.6.0
-  Downloaded aws-lc-rs v1.18.2
-  Downloaded base64 v0.23.1
-  Downloaded bytes v1.12.1
-  Downloaded chacha20 v0.10.2
-  Downloaded data-encoding v2.11.1
-  Downloaded der-parser v10.0.0
-  Downloaded digest v0.10.7
-  Downloaded event-listener v5.4.2
+  Downloaded percent-encoding v2.3.2
+  Downloaded crossbeam-epoch v0.9.21
+  Downloaded pin-project-lite v0.2.17
+  Downloaded rand_core v0.6.4
+  Downloaded bitflags v2.13.2
   Downloaded fastwebsockets v0.10.0
-  Downloaded futures-channel v0.3.34
-  Downloaded futures-task v0.3.34
-  Downloaded generic-array v0.14.9
-  Downloaded getrandom v0.2.17
+  Downloaded powerfmt v0.2.1
+  Downloaded potential_utf v0.1.6
+  Downloaded ppv-lite86 v0.2.21
+  Downloaded matchers v0.2.0
+  Downloaded either v1.19.0
+  Downloaded inotify-sys v0.1.8
   Downloaded ipnet v2.12.2
-  Downloaded jobserver v0.1.35
-  Downloaded kio v0.5.9
   Downloaded lock_api v0.4.14
+  Downloaded pkg-config v0.3.34
+  Downloaded rand_core v0.10.1
+  Downloaded ref-cast-impl v1.0.27
+  Downloaded rustls-pki-types v1.15.1
   Downloaded parking_lot v0.12.5
+  Downloaded notify v8.2.0
+  Downloaded serde_core v1.0.229
+  Downloaded same-file v1.0.6
+  Downloaded signature v2.2.0
+  Downloaded tokio-fd v0.3.0
+  Downloaded unicode-xid v0.2.6
+  Downloaded crypto-common v0.1.6
+  Downloaded der-parser v10.0.0
+  Downloaded displaydoc v0.2.7
+  Downloaded fnv v1.0.7
+  Downloaded itoa v1.0.18
+  Downloaded lazy_static v1.5.1
+  Downloaded rand_chacha v0.3.1
+  Downloaded rustc_version v0.4.1
+  Downloaded strsim v0.11.1
+  Downloaded cfg-if v1.0.5
+  Downloaded rusticata-macros v4.1.0
+  Downloaded tagptr v0.2.0
+  Downloaded foldhash v0.2.0
+  Downloaded futures-channel v0.3.34
+  Downloaded num_threads v0.1.8
+  Downloaded rustls-native-certs v0.8.5
+  Downloaded rustls-pemfile v2.2.0
+  Downloaded sfv v0.15.0
+  Downloaded siphasher v1.0.4
+  Downloaded socket2 v0.5.10
+  Downloaded thiserror v1.0.69
+  Downloaded thiserror-impl v2.0.21
+  Downloaded time-macros v0.2.32
+  Downloaded tinyvec v1.13.3
+  Downloaded chacha20 v0.10.2
+  Downloaded semver v1.0.28
+  Downloaded subtle v2.6.1
+  Downloaded synstructure v0.14.0
+  Downloaded utf-8 v0.7.6
+  Downloaded digest v0.10.7
+  Downloaded futures v0.3.34
+  Downloaded idna_adapter v1.2.2
+  Downloaded rustls-webpki v0.103.15
+  Downloaded scopeguard v1.2.0
+  Downloaded anstyle-query v1.1.5
+  Downloaded asn1-rs-impl v0.2.0
+  Downloaded async-channel v2.5.0
+  Downloaded cpufeatures v0.3.1
+  Downloaded equivalent v1.0.3
+  Downloaded sha1 v0.10.7
+  Downloaded syn v2.0.119
+  Downloaded thread_local v1.1.10
+  Downloaded tokio-rustls v0.26.6
+  Downloaded clap_derive v4.6.7
+  Downloaded errno v0.3.14
+  Downloaded rustls v0.23.46
+  Downloaded utf8_iter v1.0.4
+  Downloaded rustc-hash v2.1.3
+  Downloaded utf8parse v0.2.2
+  Downloaded notify-types v2.1.0
+  Downloaded num-conv v0.2.2
   Downloaded parking_lot_core v0.9.12
   Downloaded ppp v2.3.0
-  Downloaded quinn-udp v0.5.16
-  Downloaded rcgen v0.14.10
-  Downloaded rusticata-macros v4.1.0
-  Downloaded rustls-native-certs v0.8.5
-  Downloaded rustversion v1.0.23
-  Downloaded shlex v2.0.1
-  Downloaded signal-hook-registry v1.4.8
-  Downloaded simdutf8 v0.1.5
-  Downloaded smallvec v1.16.3
-  Downloaded synstructure v0.13.2
-  Downloaded thiserror v1.0.69
-  Downloaded thiserror v2.0.21
-  Downloaded thiserror-impl v1.0.69
-  Downloaded thread_local v1.1.10
-  Downloaded time-macros v0.2.32
-  Downloaded tinystr v0.8.4
-  Downloaded tokio-rustls v0.26.6
-  Downloaded tracing-log v0.2.0
-  Downloaded utf8parse v0.2.2
-  Downloaded version_check v0.9.5
-  Downloaded want v0.3.2
-  Downloaded yasna v0.6.0
-  Downloaded yoke v0.8.3
-  Downloaded clap v4.6.7
-  Downloaded crossbeam-channel v0.5.17
-  Downloaded crossbeam-epoch v0.9.21
-  Downloaded fast-socks5 v1.0.0
-  Downloaded futures v0.3.34
-  Downloaded getrandom v0.4.3
-  Downloaded http v1.5.0
-  Downloaded jsonwebtoken v11.1.0
-  Downloaded minimal-lexical v0.2.1
-  Downloaded notify v8.2.0
-  Downloaded num-traits v0.2.19
-  Downloaded pin-project v1.1.13
-  Downloaded proc-macro2 v1.0.107
-  Downloaded rustls-pemfile v2.2.0
-  Downloaded rustls-platform-verifier v0.7.1
-  Downloaded ryu v1.0.23
-  Downloaded semver v1.0.28
-  Downloaded serde_core v1.0.229
-  Downloaded serde_derive v1.0.229
-  Downloaded serde_yaml v0.9.34+deprecated
-  Downloaded sfv v0.15.0
-  Downloaded sharded-slab v0.1.7
-  Downloaded socket2 v0.5.10
+  Downloaded quote v1.0.47
   Downloaded socket2 v0.6.5
-  Downloaded tinyvec v1.13.3
-  Downloaded tokio-stream v0.1.19
-  Downloaded unicode-ident v1.0.27
-  Downloaded unicode-xid v0.2.6
-  Downloaded unsafe-libyaml v0.2.11
-  Downloaded walkdir v2.5.0
-  Downloaded web-transport-proto v0.6.2
-  Downloaded asn1-rs v0.7.2
-  Downloaded cc v1.9.0
-  Downloaded derive_more v2.1.1
-  Downloaded getrandom v0.3.4
-  Downloaded icu_collections v2.3.0
-  Downloaded icu_properties v2.3.0
-  Downloaded indexmap v2.14.2
-  Downloaded memchr v2.8.3
-  Downloaded nom v7.1.3
-  Downloaded num-bigint v0.4.8
-  Downloaded prefix-trie v0.8.4
-  Downloaded quinn v0.11.12
-  Downloaded rand v0.8.8
-  Downloaded rustls-webpki v0.103.15
-  Downloaded tracing-attributes v0.1.31
-  Downloaded tracing-core v0.1.36
-  Downloaded url v2.5.8
-  Downloaded zerofrom-derive v0.1.8
-  Downloaded derive_more-impl v2.1.1
-  Downloaded hyper v1.12.0
-  Downloaded icu_locale_core v2.3.0
-  Downloaded mio v1.2.4
-  Downloaded rand v0.10.3
-  Downloaded uuid v1.28.0
-  Downloaded web-transport-trait v0.5.0
-  Downloaded zerofrom v0.1.8
+  Downloaded synstructure v0.13.2
   Downloaded zerovec-derive v0.11.6
-  Downloaded zmij v1.0.23
+  Downloaded async-trait v0.1.92
+  Downloaded jobserver v0.1.35
+  Downloaded num-integer v0.1.47
+  Downloaded yoke-derive v0.8.4
+  Downloaded zerofrom v0.1.8
+  Downloaded icu_provider v2.3.1
+  Downloaded tokio-macros v2.7.2
+  Downloaded web-transport-trait v0.5.0
+  Downloaded inotify v0.11.5
+  Downloaded litemap v0.8.3
+  Downloaded num-traits v0.2.19
+  Downloaded proc-macro2 v1.0.107
+  Downloaded untrusted v0.9.0
+  Downloaded zeroize_derive v1.5.0
+  Downloaded getrandom v0.2.17
+  Downloaded quinn-udp v0.5.16
+  Downloaded web-transport-proto v0.6.2
   Downloaded anstream v1.0.0
   Downloaded anstyle v1.0.14
   Downloaded anstyle-parse v1.0.0
-  Downloaded hickory-net v0.26.3
-  Downloaded hickory-proto v0.26.3
-  Downloaded hyper-util v0.1.21
-  Downloaded icu_properties_data v2.3.0
-  Downloaded tokio-util v0.7.20
-  Downloaded unicode-segmentation v1.13.3
-  Downloaded writeable v0.6.4
-  Downloaded x509-parser v0.18.1
-  Downloaded clap_builder v4.6.7
-  Downloaded futures-util v0.3.34
-  Downloaded h2 v0.4.20
-  Downloaded hashbrown v0.17.1
-  Downloaded idna v1.1.0
-  Downloaded libm v0.2.16
+  Downloaded tokio-stream v0.1.19
+  Downloaded zeroize v1.9.1
+  Downloaded zerofrom-derive v0.1.8
+  Downloaded asn1-rs-derive v0.6.0
+  Downloaded minimal-lexical v0.2.1
+  Downloaded version_check v0.9.5
+  Downloaded kio v0.5.9
+  Downloaded log v0.4.34
+  Downloaded rcgen v0.14.10
+  Downloaded tracing-core v0.1.36
+  Downloaded yoke v0.8.3
+  Downloaded atomic-waker v1.1.2
+  Downloaded pin-project v1.1.13
+  Downloaded yasna v0.6.0
+  Downloaded rand v0.10.3
+  Downloaded zmij v1.0.23
+  Downloaded untrusted v0.7.1
+  Downloaded uuid v1.28.0
+  Downloaded walkdir v2.5.0
+  Downloaded anyhow v1.0.104
   Downloaded regex v1.13.1
+  Downloaded indexmap v2.14.2
+  Downloaded memchr v2.8.3
+  Downloaded rand v0.8.8
+  Downloaded tracing-attributes v0.1.31
+  Downloaded asn1-rs v0.7.2
+  Downloaded quinn v0.11.12
+  Downloaded num-bigint v0.4.8
+  Downloaded unsafe-libyaml v0.2.11
+  Downloaded zerotrie v0.2.5
+  Downloaded x509-parser v0.18.1
+  Downloaded jsonwebtoken v11.1.0
   Downloaded typenum v1.20.1
+  Downloaded unicode-segmentation v1.13.3
   Downloaded web-transport-quinn v0.13.2
-  Downloaded portable-atomic v1.15.0
-  Downloaded serde_json v1.0.154
+  Downloaded arc-swap v1.9.3
+  Downloaded base64 v0.21.7
+  Downloaded h2 v0.4.20
+  Downloaded hyper-util v0.1.21
+  Downloaded url v2.5.8
+  Downloaded zerovec v0.11.8
+  Downloaded icu_normalizer v2.3.0
+  Downloaded idna v1.1.0
+  Downloaded tokio-util v0.7.20
+  Downloaded libm v0.2.16
   Downloaded aho-corasick v1.1.5
   Downloaded moka v0.12.16
-  Downloaded quinn-proto v0.11.19
   Downloaded tracing-subscriber v0.3.23
-  Downloaded zerotrie v0.2.5
-  Downloaded zerovec v0.11.8
-  Downloaded regex-syntax v0.8.11
-  Downloaded icu_normalizer v2.3.0
-  Downloaded tracing v0.1.44
-  Downloaded syn v2.0.119
-  Downloaded syn v3.0.9
-  Downloaded time v0.3.55
-  Downloaded regex-automata v0.4.18
-  Downloaded anstyle-query v1.1.5
-  Downloaded async-channel v2.5.0
-  Downloaded arc-swap v1.9.3
-  Downloaded asn1-rs-impl v0.2.0
-  Downloaded libc v0.2.191
-  Downloaded anyhow v1.0.104
-  Downloaded atomic-waker v1.1.2
-  Downloaded autocfg v1.5.1
-  Downloaded rustls v0.23.46
+  Downloaded aws-lc-rs v1.18.2
+  Downloaded serde_regex v1.2.0
+  Downloaded colorchoice v1.0.5
+  Downloaded quinn-proto v0.11.19
+  Downloaded nix v0.31.3
   Downloaded zerocopy v0.8.63
-  Downloaded tokio v1.54.0
+  Downloaded libc v0.2.191
+  Downloaded regex-syntax v0.8.11
+  Downloaded tracing v0.1.44
+  Downloaded regex-automata v0.4.18
+  Downloaded fs_extra v1.3.0
+  Downloaded thiserror v2.0.21
+  Downloaded find-msvc-tools v0.1.15
+  Downloaded want v0.3.2
+  Downloaded futures-core v0.3.34
+  Downloaded dunce v1.0.5
+  Downloaded try-lock v0.2.5
+  Downloaded cfg_aliases v0.2.2
+  Downloaded cpufeatures v0.2.17
+  Downloaded fdlimit v0.3.0
+  Downloaded event-listener-strategy v0.5.4
+  Downloaded form_urlencoded v1.2.2
+  Downloaded clap_lex v1.1.1
+  Downloaded time-core v0.1.9
+  Downloaded deranged v0.5.9
+  Downloaded thiserror-impl v1.0.69
+  Downloaded crossbeam-utils v0.8.23
+  Downloaded simdutf8 v0.1.5
+  Downloaded tracing-log v0.2.0
+  Downloaded writeable v0.6.4
+  Downloaded slab v0.4.12
+  Downloaded tinystr v0.8.4
+  Downloaded critical-section v1.2.0
+  Downloaded data-encoding v2.11.1
+  Downloaded event-listener v5.4.2
+  Downloaded fast-socks5 v1.0.0
+  Downloaded rustversion v1.0.23
+  Downloaded signal-hook-registry v1.4.8
+  Downloaded cmake v0.1.58
+  Downloaded concurrent-queue v2.5.0
+  Downloaded convert_case v0.10.0
+  Downloaded fastbloom v0.17.0
+  Downloaded smallvec v1.16.3
+  Downloaded ryu v1.0.23
+  Downloaded unicode-ident v1.0.27
+  Downloaded autocfg v1.5.1
+  Downloaded serde_derive v1.0.229
+  Downloaded shlex v2.0.1
+  Downloaded sharded-slab v0.1.7
+  Downloaded rustls-platform-verifier v0.7.1
+  Downloaded base64 v0.22.1
+  Downloaded bytes v1.12.1
+  Downloaded serde v1.0.229
+  Downloaded serde_yaml v0.9.34+deprecated
+  Downloaded crossbeam-channel v0.5.17
+  Downloaded derive_more v2.1.1
+  Downloaded base64 v0.23.1
+  Downloaded clap v4.6.7
+  Downloaded derive_more-impl v2.1.1
+  Downloaded serde_json v1.0.154
+  Downloaded cc v1.9.0
+  Downloaded clap_builder v4.6.7
   Downloaded ring v0.17.14
+  Downloaded time v0.3.55
+  Downloaded syn v3.0.9
+  Downloaded tokio v1.54.0
   Downloaded aws-lc-sys v0.46.0
     Updating crates.io index
  Downloading crates ...
   Downloaded addr2line v0.27.1
-  Downloaded adler2 v2.0.1
   Downloaded cfg-if v1.0.4
   Downloaded getopts v0.2.24
+  Downloaded adler2 v2.0.1
   Downloaded gimli v0.34.0
   Downloaded rustc-demangle v0.1.28
-  Downloaded miniz_oxide v0.9.1
   Downloaded rustc-literal-escaper v0.0.8
   Downloaded object v0.39.1
+  Downloaded miniz_oxide v0.9.1
    Compiling compiler_builtins v0.1.160 (/usr/local/rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/compiler-builtins/compiler-builtins)
    Compiling core v0.0.0 (/usr/local/rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core)
    Compiling libc v0.2.191
@@ -321,67 +334,83 @@ info: downloading 4 components
    Compiling quote v1.0.47
    Compiling portable-atomic v1.15.0
    Compiling parking_lot_core v0.9.12
-   Compiling find-msvc-tools v0.1.15
+   Compiling shlex v2.0.1
    Compiling syn v3.0.9
    Compiling syn v2.0.119
    Compiling jobserver v0.1.35
-   Compiling shlex v2.0.1
+   Compiling find-msvc-tools v0.1.15
    Compiling cc v1.9.0
    Compiling cmake v0.1.58
    Compiling dunce v1.0.5
-   Compiling autocfg v1.5.1
-   Compiling synstructure v0.14.0
    Compiling fs_extra v1.3.0
+   Compiling synstructure v0.14.0
    Compiling pkg-config v0.3.34
+   Compiling autocfg v1.5.1
    Compiling aws-lc-sys v0.46.0
    Compiling zeroize_derive v1.5.0
-   Compiling zerofrom-derive v0.1.8
    Compiling displaydoc v0.2.7
+   Compiling zerofrom-derive v0.1.8
    Compiling yoke-derive v0.8.4
-   Compiling zerovec-derive v0.11.6
    Compiling tokio-macros v2.7.2
+   Compiling zerovec-derive v0.11.6
    Compiling aws-lc-rs v1.18.2
+   Compiling serde_core v1.0.229
+   Compiling tracing-attributes v0.1.31
+   Compiling thiserror v2.0.21
+   Compiling thiserror-impl v2.0.21
+   Compiling num-traits v0.2.19
+   Compiling icu_normalizer_data v2.3.0
+   Compiling getrandom v0.4.3
+   Compiling version_check v0.9.5
+   Compiling icu_properties_data v2.3.0
+   Compiling cfg_aliases v0.2.2
+   Compiling serde v1.0.229
+   Compiling serde_derive v1.0.229
+   Compiling time-core v0.1.9
+   Compiling num-conv v0.2.2
+   Compiling rustls v0.23.46
+   Compiling time-macros v0.2.32
 warning: aws-lc-sys@0.46.0: Emitting configuration: cargo:rustc-cfg=universal
 warning: aws-lc-sys@0.46.0: Building with: CC
 warning: aws-lc-sys@0.46.0: Symbol Prefix: Some("aws_lc_0_46_0")
 warning: aws-lc-sys@0.46.0: Target platform: 'mipsel-unknown-linux-musl'
 warning: aws-lc-sys@0.46.0: No target-specific source found: linux-mips
-warning: aws-lc-sys@0.46.0: Environment Variable found 'CC_mipsel_unknown_linux_musl': 'mipsel-linux-muslsf-gcc'
-warning: aws-lc-sys@0.46.0: Setting CC_mipsel_unknown_linux_musl: mipsel-linux-muslsf-gcc
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compilation of 'c11.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-muslsf-gcc\": No such file or directory (os error 2)" }).
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Environment Variable found 'CC_mipsel_unknown_linux_musl': ''
+warning: aws-lc-sys@0.46.0: Setting CC_mipsel_unknown_linux_musl: 
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compilation of 'c11.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-musl-gcc\": No such file or directory (os error 2)" }).
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
 warning: aws-lc-sys@0.46.0: NOTICE: Build environment source paths might be visible in release binary.
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
 warning: aws-lc-sys@0.46.0: Assembler does not support flag: -Wa,--debug-prefix-map=/usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/aws-lc-sys-0.46.0=
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compilation of 'stdalign_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-muslsf-gcc\": No such file or directory (os error 2)" }).
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compilation of 'builtin_swap_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-muslsf-gcc\": No such file or directory (os error 2)" }).
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-muslsf-gcc\": No such file or directory (os error 2)" }).
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-muslsf-gcc\": No such file or directory (os error 2)" }).
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
-warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compilation of 'stdalign_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-musl-gcc\": No such file or directory (os error 2)" }).
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compilation of 'builtin_swap_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-musl-gcc\": No such file or directory (os error 2)" }).
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-musl-gcc\": No such file or directory (os error 2)" }).
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-musl-gcc\": No such file or directory (os error 2)" }).
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
+warning: aws-lc-sys@0.46.0: Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
 error: failed to run custom build command for `aws-lc-sys v0.46.0`
 
 Caused by:
@@ -490,7 +519,7 @@ Caused by:
   cargo:warning=Symbol Prefix: Some("aws_lc_0_46_0")
   cargo:rerun-if-env-changed=CARGO_FEATURE_SSL
   cargo:warning=Target platform: 'mipsel-unknown-linux-musl'
-  cargo:root=/__w/home-access-client/home-access-client/wstunnel/target/mipsel-unknown-linux-musl/release/build/aws-lc-sys/bbea0fefd0349987/out
+  cargo:root=/__w/home-access-client/home-access-client/wstunnel/target/mipsel-unknown-linux-musl/release/build/aws-lc-sys/cf2ef35d5b8893d0/out
   cargo:warning=No target-specific source found: linux-mips
   cargo:rerun-if-env-changed=AWS_LC_SYS_TARGET_CFLAGS_mipsel_unknown_linux_musl
   cargo:rerun-if-env-changed=AWS_LC_SYS_TARGET_CFLAGS
@@ -507,9 +536,9 @@ Caused by:
   cargo:rerun-if-env-changed=AWS_LC_SYS_CC_mipsel_unknown_linux_musl
   cargo:rerun-if-env-changed=AWS_LC_SYS_CC
   cargo:rerun-if-env-changed=CC_mipsel_unknown_linux_musl
-  cargo:warning=Environment Variable found 'CC_mipsel_unknown_linux_musl': 'mipsel-linux-muslsf-gcc'
+  cargo:warning=Environment Variable found 'CC_mipsel_unknown_linux_musl': ''
   cargo:rerun-if-env-changed=CC
-  cargo:warning=Setting CC_mipsel_unknown_linux_musl: mipsel-linux-muslsf-gcc
+  cargo:warning=Setting CC_mipsel_unknown_linux_musl: 
   cargo:rerun-if-env-changed=AWS_LC_SYS_TARGET_CXX_mipsel_unknown_linux_musl
   cargo:rerun-if-env-changed=AWS_LC_SYS_TARGET_CXX
   cargo:rerun-if-env-changed=TARGET_CXX_mipsel_unknown_linux_musl
@@ -521,11 +550,11 @@ Caused by:
   cargo:rerun-if-env-changed=CC_mipsel-unknown-linux-musl
   CC_mipsel-unknown-linux-musl = None
   cargo:rerun-if-env-changed=CC_mipsel_unknown_linux_musl
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
-  CC_KNOWN_WRAPPER_CUSTOM = None
+  CC_mipsel_unknown_linux_musl = Some()
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CPATH
   cargo:rerun-if-env-changed=C_INCLUDE_PATH
   cargo:rerun-if-env-changed=CPLUS_INCLUDE_PATH
@@ -547,11 +576,11 @@ Caused by:
   cargo:rerun-if-env-changed=CC_mipsel-unknown-linux-musl
   CC_mipsel-unknown-linux-musl = None
   cargo:rerun-if-env-changed=CC_mipsel_unknown_linux_musl
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
-  CC_KNOWN_WRAPPER_CUSTOM = None
+  CC_mipsel_unknown_linux_musl = Some()
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CPATH
   cargo:rerun-if-env-changed=C_INCLUDE_PATH
   cargo:rerun-if-env-changed=CPLUS_INCLUDE_PATH
@@ -573,11 +602,11 @@ Caused by:
   cargo:rerun-if-env-changed=CC_mipsel-unknown-linux-musl
   CC_mipsel-unknown-linux-musl = None
   cargo:rerun-if-env-changed=CC_mipsel_unknown_linux_musl
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
-  CC_KNOWN_WRAPPER_CUSTOM = None
+  CC_mipsel_unknown_linux_musl = Some()
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CPATH
   cargo:rerun-if-env-changed=C_INCLUDE_PATH
   cargo:rerun-if-env-changed=CPLUS_INCLUDE_PATH
@@ -599,21 +628,21 @@ Caused by:
   cargo:rerun-if-env-changed=CC_FORCE_DISABLE
   CC_FORCE_DISABLE = None
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
   CFLAGS_mipsel_unknown_linux_musl = None
   CFLAGS_mipsel-unknown-linux-musl = None
-  cargo:warning=Compilation of 'c11.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-muslsf-gcc\": No such file or directory (os error 2)" }).
+  cargo:warning=Compilation of 'c11.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-musl-gcc\": No such file or directory (os error 2)" }).
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
@@ -621,11 +650,11 @@ Caused by:
   CFLAGS_mipsel-unknown-linux-musl = None
   cargo:warning=NOTICE: Build environment source paths might be visible in release binary.
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
@@ -634,11 +663,11 @@ Caused by:
   cargo:rerun-if-env-changed=CC_mipsel-unknown-linux-musl
   CC_mipsel-unknown-linux-musl = None
   cargo:rerun-if-env-changed=CC_mipsel_unknown_linux_musl
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
-  CC_KNOWN_WRAPPER_CUSTOM = None
+  CC_mipsel_unknown_linux_musl = Some()
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CPATH
   cargo:rerun-if-env-changed=C_INCLUDE_PATH
   cargo:rerun-if-env-changed=CPLUS_INCLUDE_PATH
@@ -658,11 +687,11 @@ Caused by:
   cargo:rerun-if-env-changed=CFLAGS_mipsel-unknown-linux-musl
   CFLAGS_mipsel-unknown-linux-musl = None
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
@@ -672,11 +701,11 @@ Caused by:
   cargo:rerun-if-env-changed=CC_mipsel-unknown-linux-musl
   CC_mipsel-unknown-linux-musl = None
   cargo:rerun-if-env-changed=CC_mipsel_unknown_linux_musl
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
-  CC_KNOWN_WRAPPER_CUSTOM = None
+  CC_mipsel_unknown_linux_musl = Some()
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CPATH
   cargo:rerun-if-env-changed=C_INCLUDE_PATH
   cargo:rerun-if-env-changed=CPLUS_INCLUDE_PATH
@@ -698,23 +727,23 @@ Caused by:
   cargo:rerun-if-env-changed=CC_FORCE_DISABLE
   CC_FORCE_DISABLE = None
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
   CFLAGS_mipsel_unknown_linux_musl = None
   CFLAGS_mipsel-unknown-linux-musl = None
-  cargo:warning=Compilation of 'stdalign_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-muslsf-gcc\": No such file or directory (os error 2)" }).
+  cargo:warning=Compilation of 'stdalign_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-musl-gcc\": No such file or directory (os error 2)" }).
   cargo:rerun-if-env-changed=CC_mipsel-unknown-linux-musl
   CC_mipsel-unknown-linux-musl = None
   cargo:rerun-if-env-changed=CC_mipsel_unknown_linux_musl
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
-  CC_KNOWN_WRAPPER_CUSTOM = None
+  CC_mipsel_unknown_linux_musl = Some()
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CPATH
   cargo:rerun-if-env-changed=C_INCLUDE_PATH
   cargo:rerun-if-env-changed=CPLUS_INCLUDE_PATH
@@ -736,23 +765,23 @@ Caused by:
   cargo:rerun-if-env-changed=CC_FORCE_DISABLE
   CC_FORCE_DISABLE = None
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
   CFLAGS_mipsel_unknown_linux_musl = None
   CFLAGS_mipsel-unknown-linux-musl = None
-  cargo:warning=Compilation of 'builtin_swap_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-muslsf-gcc\": No such file or directory (os error 2)" }).
+  cargo:warning=Compilation of 'builtin_swap_check.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-musl-gcc\": No such file or directory (os error 2)" }).
   cargo:rerun-if-env-changed=CC_mipsel-unknown-linux-musl
   CC_mipsel-unknown-linux-musl = None
   cargo:rerun-if-env-changed=CC_mipsel_unknown_linux_musl
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
-  CC_KNOWN_WRAPPER_CUSTOM = None
+  CC_mipsel_unknown_linux_musl = Some()
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CPATH
   cargo:rerun-if-env-changed=C_INCLUDE_PATH
   cargo:rerun-if-env-changed=CPLUS_INCLUDE_PATH
@@ -774,23 +803,23 @@ Caused by:
   cargo:rerun-if-env-changed=CC_FORCE_DISABLE
   CC_FORCE_DISABLE = None
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
   CFLAGS_mipsel_unknown_linux_musl = None
   CFLAGS_mipsel-unknown-linux-musl = None
-  cargo:warning=Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-muslsf-gcc\": No such file or directory (os error 2)" }).
+  cargo:warning=Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-musl-gcc\": No such file or directory (os error 2)" }).
   cargo:rerun-if-env-changed=CC_mipsel-unknown-linux-musl
   CC_mipsel-unknown-linux-musl = None
   cargo:rerun-if-env-changed=CC_mipsel_unknown_linux_musl
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
-  CC_KNOWN_WRAPPER_CUSTOM = None
+  CC_mipsel_unknown_linux_musl = Some()
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CPATH
   cargo:rerun-if-env-changed=C_INCLUDE_PATH
   cargo:rerun-if-env-changed=CPLUS_INCLUDE_PATH
@@ -812,19 +841,19 @@ Caused by:
   cargo:rerun-if-env-changed=CC_FORCE_DISABLE
   CC_FORCE_DISABLE = None
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
   CFLAGS_mipsel_unknown_linux_musl = None
   CFLAGS_mipsel-unknown-linux-musl = None
-  cargo:warning=Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-muslsf-gcc\": No such file or directory (os error 2)" }).
+  cargo:warning=Compilation of 'linux_random_h.c' failed - Err(Error { kind: ToolNotFound, message: "failed to find tool \"mipsel-linux-musl-gcc\": No such file or directory (os error 2)" }).
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
@@ -835,13 +864,13 @@ Caused by:
   cargo:rerun-if-env-changed=CC_mipsel-unknown-linux-musl
   CC_mipsel-unknown-linux-musl = None
   cargo:rerun-if-env-changed=CC_mipsel_unknown_linux_musl
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
-  CC_KNOWN_WRAPPER_CUSTOM = None
+  CC_mipsel_unknown_linux_musl = Some()
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CPATH
   cargo:rerun-if-env-changed=C_INCLUDE_PATH
   cargo:rerun-if-env-changed=CPLUS_INCLUDE_PATH
@@ -861,22 +890,22 @@ Caused by:
   cargo:rerun-if-env-changed=CFLAGS_mipsel-unknown-linux-musl
   CFLAGS_mipsel-unknown-linux-musl = None
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
   CFLAGS_mipsel_unknown_linux_musl = None
   CFLAGS_mipsel-unknown-linux-musl = None
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
@@ -885,9 +914,9 @@ Caused by:
   cargo:rerun-if-env-changed=CC_FORCE_DISABLE
   CC_FORCE_DISABLE = None
   CC_mipsel-unknown-linux-musl = None
-  CC_mipsel_unknown_linux_musl = Some(mipsel-linux-muslsf-gcc)
-  CC_KNOWN_WRAPPER_CUSTOM = None
-  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  CC_mipsel_unknown_linux_musl = Some()
+  CROSS_COMPILE = None
+  cargo:warning=Compiler family detection failed due to error: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   CRATE_CC_NO_DEFAULTS = None
   CFLAGS = None
   TARGET_CFLAGS = None
@@ -896,8 +925,8 @@ Caused by:
 
   --- stderr
 
-  thread 'main' (956) panicked at /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/aws-lc-sys-0.46.0/builder/cc_builder.rs:722:37:
-  Failed to compile jitterentropy: ToolNotFound: failed to find tool "mipsel-linux-muslsf-gcc": No such file or directory (os error 2)
+  thread 'main' (982) panicked at /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/aws-lc-sys-0.46.0/builder/cc_builder.rs:722:37:
+  Failed to compile jitterentropy: ToolNotFound: failed to find tool "mipsel-linux-musl-gcc": No such file or directory (os error 2)
   note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 warning: build failed, waiting for other jobs to finish...
 BUILD FAILED WITH CODE 101
