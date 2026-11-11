@@ -18,24 +18,14 @@ jobs:
           repository: 'erebe/wstunnel'
           ref: 'v11.1.0'
 
-      - name: Setup Nightly Rust
-        uses: dtolnay/rust-toolchain@nightly
-        with:
-          targets: mipsel-unknown-linux-musl
-
-      - name: Setup Zig
-        uses: mlugg/setup-zig@v1
-        with:
-          version: 0.13.0
-
-      - name: Install upx and cargo-zigbuild
+      - name: Install cross and upx
         run: |
           sudo apt-get update && sudo apt-get install -y upx
-          pipx install cargo-zigbuild
+          curl -L https://github.com/cross-rs/cross/releases/download/v0.2.5/cross-x86_64-unknown-linux-musl.tar.gz | sudo tar -xz -C /usr/local/bin
 
-      - name: Build wstunnel with cargo-zigbuild
+      - name: Build with cross
         run: |
-          cargo zigbuild --release --target mipsel-unknown-linux-musl --package wstunnel-cli
+          cross build --target mipsel-unknown-linux-musl --release --package wstunnel-cli
           cp target/mipsel-unknown-linux-musl/release/wstunnel ./wstunnel-mipsel
           upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
 
