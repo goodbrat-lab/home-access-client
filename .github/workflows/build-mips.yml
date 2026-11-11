@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: Cross-compile wstunnel v11.1.0 for mipsel soft-float musl
+    name: Cross-compile wstunnel v11.1.0 with OpenWrt 25.12.6 SDK Toolchain
     runs-on: ubuntu-latest
     container:
       image: rust:bookworm
@@ -34,29 +34,44 @@ jobs:
         run: |
           set +e
           (
-            echo "=== INSTALL TOOLS ==="
+            echo "=== INSTALL SYSTEM PACKAGES ==="
             apt-get update
-            apt-get install -y curl tar xz-utils
-            echo "=== DOWNLOADING TOOLCHAIN ==="
+            apt-get install -y zstd curl tar build-essential
+            
+            echo "=== DOWNLOAD OFFICIAL OPENWRT 25.12.6 TOOLCHAIN ==="
             mkdir -p /opt
-            curl -fSL https://musl.cc/mipsel-linux-muslsf-cross.tgz -o /opt/toolchain.tgz
-            ls -lh /opt/toolchain.tgz
-            tar -xzf /opt/toolchain.tgz -C /opt
-            ls -la /opt/mipsel-linux-muslsf-cross/bin
+            curl -fSL https://downloads.openwrt.org/releases/25.12.6/targets/ramips/mt7620/openwrt-toolchain-25.12.6-ramips-mt7620_gcc-14.3.0_musl.Linux-x86_64.tar.zst -o /opt/toolchain.tar.zst
+            ls -lh /opt/toolchain.tar.zst
+            tar --zstd -xf /opt/toolchain.tar.zst -C /opt
+            rm -f /opt/toolchain.tar.zst
+
+            TOOLCHAIN_GCC=$(find /opt -type f -name "*openwrt-linux*-gcc" | head -n 1)
+            echo "Found GCC: $TOOLCHAIN_GCC"
+            TOOLCHAIN_BIN=$(dirname "$TOOLCHAIN_GCC")
+            GCC_NAME=$(basename "$TOOLCHAIN_GCC")
+            TARGET_PREFIX=${GCC_NAME%-gcc}
+            echo "Target prefix: $TARGET_PREFIX"
+            echo "Toolchain bin: $TOOLCHAIN_BIN"
+
             echo "=== INSTALL RUST NIGHTLY ==="
             rustup toolchain install nightly --component rust-src
-            export PATH=/opt/mipsel-linux-muslsf-cross/bin:$PATH
-            export CC_mipsel_unknown_linux_musl=mipsel-linux-muslsf-gcc
-            export AR_mipsel_unknown_linux_musl=mipsel-linux-muslsf-ar
-            export CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_MUSL_LINKER=mipsel-linux-muslsf-gcc
-            export RUSTFLAGS="-C target-feature=+crt-static,+soft-float -C link-arg=-msoft-float -C link-arg=-s"
-            echo "=== BUILDING WSTUNNEL ==="
+
+            export PATH=$TOOLCHAIN_BIN:$PATH
+            export CC_mipsel_unknown_linux_musl="$TOOLCHAIN_GCC"
+            export AR_mipsel_unknown_linux_musl="$TOOLCHAIN_BIN/${TARGET_PREFIX}-ar"
+            export STRIP="$TOOLCHAIN_BIN/${TARGET_PREFIX}-strip"
+            export CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_MUSL_LINKER="$TOOLCHAIN_GCC"
+            export RUSTFLAGS="-C target-cpu=mips32r2 -C target-feature=+crt-static -C link-arg=-s"
+
+            echo "=== BUILDING WSTUNNEL FOR OPENWRT MT7620 ==="
             cd wstunnel
             cargo +nightly build -Z build-std=std,panic_abort --release --target mipsel-unknown-linux-musl --package wstunnel-cli
             BUILD_RES=$?
             if [ $BUILD_RES -eq 0 ]; then
-              /opt/mipsel-linux-muslsf-cross/bin/mipsel-linux-muslsf-strip target/mipsel-unknown-linux-musl/release/wstunnel || true
+              $STRIP target/mipsel-unknown-linux-musl/release/wstunnel || true
               cp target/mipsel-unknown-linux-musl/release/wstunnel ../output-repo/wstunnel-mipsel
+              cd ../output-repo
+              ls -lh wstunnel-mipsel
               echo "BUILD SUCCESS"
             else
               echo "BUILD FAILED WITH CODE $BUILD_RES"
@@ -73,5 +88,5 @@ jobs:
           git config user.email "actions@github.com"
           git checkout -B release-mips
           git add err.log wstunnel-mipsel || git add err.log
-          git commit -m "Build update: binary or log" || true
+          git commit -m "Build update: OpenWrt 25.12.6 toolchain build" || true
           git push -f origin release-mips
