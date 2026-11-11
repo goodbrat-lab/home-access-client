@@ -33,17 +33,23 @@ jobs:
       - name: Build with cross
         run: |
           cd wstunnel
-          cross build --target mipsel-unknown-linux-musl --release --package wstunnel-cli
-          cp target/mipsel-unknown-linux-musl/release/wstunnel ../wstunnel-mipsel
-          cd ..
-          upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
-          ls -lh wstunnel-mipsel*
+          cross build --target mipsel-unknown-linux-musl --release --package wstunnel-cli 2>&1 | tee ../build.log || true
+          if [ -f target/mipsel-unknown-linux-musl/release/wstunnel ]; then
+            cp target/mipsel-unknown-linux-musl/release/wstunnel ../wstunnel-mipsel
+            cd ..
+            upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
+            ls -lh wstunnel-mipsel*
+          else
+            cd ..
+            echo "Binary target/mipsel-unknown-linux-musl/release/wstunnel not found"
+          fi
 
       - name: Commit and push binary to release-mips branch
+        if: always()
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git checkout -B release-mips
-          git add -f wstunnel-mipsel wstunnel-mipsel-upx
-          git commit -m "Add compiled MIPS wstunnel binaries"
+          git add -f build.log wstunnel-mipsel wstunnel-mipsel-upx || true
+          git commit -m "Upload build log or binary" || true
           git push -f origin release-mips
