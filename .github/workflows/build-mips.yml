@@ -10,25 +10,31 @@ jobs:
   build:
     name: Cross-compile wstunnel v11.1.0 for mipsel
     runs-on: ubuntu-latest
-    container:
-      image: rust:bookworm
 
     steps:
-      - name: Checkout repo
+      - name: Checkout wstunnel repo
         uses: actions/checkout@v4
+        with:
+          repository: 'erebe/wstunnel'
+          ref: 'v11.1.0'
 
-      - name: Install cross compiler with log
+      - name: Install musl.cc cross toolchain and UPX
         run: |
-          apt-get update > apt.log 2>&1
-          apt-get install -y musl-tools gcc-mipsel-linux-gnu upx >> apt.log 2>&1 || true
-          which mipsel-linux-gnu-gcc >> apt.log 2>&1 || true
+          sudo apt-get update && sudo apt-get install -y upx-ucl
+          curl -L https://musl.cc/mipsel-linux-muslsf-cross.tgz | sudo tar -xz -C /opt
+          rustup target add mipsel-unknown-linux-musl
 
-      - name: Push debug log
+      - name: Build wstunnel
         run: |
-          git config --global --add safe.directory "*"
-          git config user.name "Actions Bot"
-          git config user.email "bot@github.actions"
-          git checkout -B debug-log
-          git add -f apt.log
-          git commit -m "Add apt.log"
-          git push -f origin debug-log
+          export PATH=/opt/mipsel-linux-muslsf-cross/bin:$PATH
+          cargo build --release --target mipsel-unknown-linux-musl --package wstunnel-cli --config 'target.mipsel-unknown-linux-musl.linker="mipsel-linux-muslsf-gcc"'
+          cp target/mipsel-unknown-linux-musl/release/wstunnel ./wstunnel-mipsel
+          upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wstunnel-mipsel-binaries
+          path: |
+            wstunnel-mipsel
+            wstunnel-mipsel-upx
