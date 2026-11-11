@@ -6,6 +6,9 @@ on:
       - '.github/workflows/build-mips.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Cross-compile wstunnel v11.1.0 for mipsel
@@ -17,6 +20,12 @@ jobs:
         with:
           repository: 'erebe/wstunnel'
           ref: 'v11.1.0'
+          path: wstunnel-src
+
+      - name: Checkout home-access-client repo
+        uses: actions/checkout@v4
+        with:
+          path: my-repo
 
       - name: Install cross and upx
         run: |
@@ -25,14 +34,19 @@ jobs:
 
       - name: Build with cross
         run: |
-          cross build --target mipsel-unknown-linux-musl --release --package wstunnel-cli
-          cp target/mipsel-unknown-linux-musl/release/wstunnel ./wstunnel-mipsel
-          upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
+          cd wstunnel-src
+          cross build --target mipsel-unknown-linux-musl --release --package wstunnel-cli > ../my-repo/build.log 2>&1 || true
+          if [ -f target/mipsel-unknown-linux-musl/release/wstunnel ]; then
+            cp target/mipsel-unknown-linux-musl/release/wstunnel ../my-repo/wstunnel-mipsel
+            upx --best --lzma ../my-repo/wstunnel-mipsel -o ../my-repo/wstunnel-mipsel-upx || true
+          fi
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: wstunnel-mipsel-binaries
-          path: |
-            wstunnel-mipsel
-            wstunnel-mipsel-upx
+      - name: Push output to debug-log branch
+        run: |
+          cd my-repo
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git checkout -B debug-log
+          git add -f build.log wstunnel-mipsel wstunnel-mipsel-upx || true
+          git commit -m "Upload build log and binary" || true
+          git push -f origin debug-log
