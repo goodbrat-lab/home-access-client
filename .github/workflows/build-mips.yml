@@ -11,7 +11,7 @@ jobs:
     name: Cross-compile wstunnel v11.1.0 for mipsel
     runs-on: ubuntu-latest
     container:
-      image: rust:bullseye
+      image: rust:bookworm
 
     steps:
       - name: Checkout official wstunnel repo
@@ -23,7 +23,7 @@ jobs:
       - name: Install cross compiler
         run: |
           apt-get update
-          apt-get install -y musl-tools gcc-mipsel-linux-gnu upx-ucl
+          apt-get install -y musl-tools gcc-mipsel-linux-gnu upx
           rustup target add mipsel-unknown-linux-musl
 
       - name: Build wstunnel
@@ -36,6 +36,7 @@ jobs:
           upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
 
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: wstunnel-mipsel-binaries
