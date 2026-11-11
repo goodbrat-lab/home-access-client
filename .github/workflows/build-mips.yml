@@ -18,16 +18,20 @@ jobs:
           repository: 'erebe/wstunnel'
           ref: 'v11.1.0'
 
-      - name: Install musl.cc cross toolchain and UPX
+      - name: Setup Zig
+        uses: mlugg/setup-zig@v1
+        with:
+          version: 0.13.0
+
+      - name: Install cargo-zigbuild and upx
         run: |
           sudo apt-get update && sudo apt-get install -y upx-ucl
-          curl -L https://musl.cc/mipsel-linux-muslsf-cross.tgz | sudo tar -xz -C /opt
+          cargo install cargo-zigbuild
           rustup target add mipsel-unknown-linux-musl
 
-      - name: Build wstunnel
+      - name: Build wstunnel with cargo-zigbuild
         run: |
-          export PATH=/opt/mipsel-linux-muslsf-cross/bin:$PATH
-          cargo build --release --target mipsel-unknown-linux-musl --package wstunnel-cli --config 'target.mipsel-unknown-linux-musl.linker="mipsel-linux-muslsf-gcc"'
+          cargo zigbuild --release --target mipsel-unknown-linux-musl --package wstunnel-cli
           cp target/mipsel-unknown-linux-musl/release/wstunnel ./wstunnel-mipsel
           upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
 
