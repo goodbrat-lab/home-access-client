@@ -14,32 +14,21 @@ jobs:
       image: rust:bookworm
 
     steps:
-      - name: Checkout official wstunnel repo
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          repository: 'erebe/wstunnel'
-          ref: 'v11.1.0'
 
-      - name: Install cross compiler
+      - name: Install cross compiler with log
         run: |
-          apt-get update
-          apt-get install -y musl-tools gcc-mipsel-linux-gnu upx
-          rustup target add mipsel-unknown-linux-musl
+          apt-get update > apt.log 2>&1
+          apt-get install -y musl-tools gcc-mipsel-linux-gnu upx >> apt.log 2>&1 || true
+          which mipsel-linux-gnu-gcc >> apt.log 2>&1 || true
 
-      - name: Build wstunnel
-        env:
-          CC_mipsel_unknown_linux_musl: mipsel-linux-gnu-gcc
-          CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_MUSL_LINKER: mipsel-linux-gnu-gcc
+      - name: Push debug log
         run: |
-          cargo build --release --target mipsel-unknown-linux-musl --package wstunnel-cli
-          cp target/mipsel-unknown-linux-musl/release/wstunnel ./wstunnel-mipsel
-          upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
-
-      - name: Upload artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: wstunnel-mipsel-binaries
-          path: |
-            wstunnel-mipsel
-            wstunnel-mipsel-upx
+          git config --global --add safe.directory "*"
+          git config user.name "Actions Bot"
+          git config user.email "bot@github.actions"
+          git checkout -B debug-log
+          git add -f apt.log
+          git commit -m "Add apt.log"
+          git push -f origin debug-log
