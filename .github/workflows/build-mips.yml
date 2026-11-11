@@ -11,13 +11,12 @@ permissions:
 
 jobs:
   build:
-    name: Cross-compile wstunnel v11.1.0 for mipsel
+    name: Cross-compile wstunnel v11.1.0 for mipsel static
     runs-on: ubuntu-latest
+    container:
+      image: rust:bookworm
 
     steps:
-      - name: Checkout home-access-client
-        uses: actions/checkout@v4
-
       - name: Checkout wstunnel repo
         uses: actions/checkout@v4
         with:
@@ -25,31 +24,37 @@ jobs:
           ref: 'v11.1.0'
           path: wstunnel
 
-      - name: Install cross and upx
-        run: |
-          sudo apt-get update && sudo apt-get install -y upx
-          curl -L https://github.com/cross-rs/cross/releases/download/v0.2.5/cross-x86_64-unknown-linux-musl.tar.gz | sudo tar -xz -C /usr/local/bin
+      - name: Checkout home-access-client
+        uses: actions/checkout@v4
+        with:
+          path: output-repo
 
-      - name: Build with cross
+      - name: Install compiler
+        run: |
+          apt-get update
+          apt-get install -y gcc-mipsel-linux-gnu libc6-dev-mipsel-cross upx
+          rustup target add mipsel-unknown-linux-gnu
+
+      - name: Build static binary
+        env:
+          CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_GNU_LINKER: mipsel-linux-gnu-gcc
+          RUSTFLAGS: "-C target-feature=+crt-static -C link-arg=-static"
         run: |
           cd wstunnel
-          cross build --target mipsel-unknown-linux-musl --release --package wstunnel-cli 2>&1 | tee ../build.log || true
-          if [ -f target/mipsel-unknown-linux-musl/release/wstunnel ]; then
-            cp target/mipsel-unknown-linux-musl/release/wstunnel ../wstunnel-mipsel
-            cd ..
-            upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
-            ls -lh wstunnel-mipsel*
-          else
-            cd ..
-            echo "Binary target/mipsel-unknown-linux-musl/release/wstunnel not found"
-          fi
+          cargo build --release --target mipsel-unknown-linux-gnu --package wstunnel-cli
+          file target/mipsel-unknown-linux-gnu/release/wstunnel || true
+          cp target/mipsel-unknown-linux-gnu/release/wstunnel ../output-repo/wstunnel-mipsel
+          cd ../output-repo
+          upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || cp ./wstunnel-mipsel ./wstunnel-mipsel-upx
+          ls -lh wstunnel-mipsel*
 
-      - name: Commit and push binary to release-mips branch
-        if: always()
+      - name: Push to release-mips branch
         run: |
+          cd output-repo
+          git config --global --add safe.directory "*"
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git checkout -B release-mips
-          git add -f build.log wstunnel-mipsel wstunnel-mipsel-upx || true
-          git commit -m "Upload build log or binary" || true
+          git add -f wstunnel-mipsel wstunnel-mipsel-upx
+          git commit -m "Upload compiled static MIPS wstunnel binary"
           git push -f origin release-mips
