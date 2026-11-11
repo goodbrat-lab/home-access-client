@@ -44,9 +44,9 @@ jobs:
             tar --zstd -xf /opt/toolchain.tar.zst -C /opt
             rm -f /opt/toolchain.tar.zst
 
-            echo "=== INSPECT TOOLCHAIN FILES ==="
-            ls -la /opt
-            find /opt -name "*gcc*" -o -name "*clang*" | head -n 30
+            TOOLCHAIN_ROOT=$(find /opt -maxdepth 1 -type d -name "openwrt-toolchain*")
+            export STAGING_DIR="$TOOLCHAIN_ROOT"
+            echo "STAGING_DIR: $STAGING_DIR"
 
             TOOLCHAIN_GCC=$(find /opt -name "*mips*gcc" | head -n 1)
             echo "Selected GCC: $TOOLCHAIN_GCC"
@@ -56,6 +56,16 @@ jobs:
             echo "Target prefix: $TARGET_PREFIX"
             echo "Toolchain bin: $TOOLCHAIN_BIN"
 
+            CRT_FILE=$(find /opt -name "crt1.o" | head -n 1)
+            echo "Found crt1.o at: $CRT_FILE"
+            if [ -n "$CRT_FILE" ]; then
+              CRT_DIR=$(dirname "$CRT_FILE")
+              LIBGCC_EH=$(find /opt -name "libgcc_eh.a" | head -n 1)
+              if [ -n "$LIBGCC_EH" ]; then
+                ln -sf "$LIBGCC_EH" "$CRT_DIR/libunwind.a" || true
+              fi
+            fi
+
             echo "=== INSTALL RUST NIGHTLY ==="
             rustup toolchain install nightly --component rust-src
 
@@ -64,7 +74,13 @@ jobs:
             export AR_mipsel_unknown_linux_musl="$TOOLCHAIN_BIN/${TARGET_PREFIX}-ar"
             export STRIP="$TOOLCHAIN_BIN/${TARGET_PREFIX}-strip"
             export CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_MUSL_LINKER="$TOOLCHAIN_GCC"
-            export RUSTFLAGS="-C target-cpu=mips32r2 -C target-feature=+crt-static -C link-arg=-s"
+            
+            # Use dynamic linking against OpenWrt musl libc
+            if [ -n "$CRT_DIR" ]; then
+              export RUSTFLAGS="-C target-cpu=mips32r2 -C target-feature=-crt-static -C link-arg=-s -C link-arg=-L$CRT_DIR"
+            else
+              export RUSTFLAGS="-C target-cpu=mips32r2 -C target-feature=-crt-static -C link-arg=-s"
+            fi
 
             echo "=== BUILDING WSTUNNEL FOR OPENWRT MT7620 ==="
             cd wstunnel
@@ -91,5 +107,5 @@ jobs:
           git config user.email "actions@github.com"
           git checkout -B release-mips
           git add err.log wstunnel-mipsel || git add err.log
-          git commit -m "Build update: OpenWrt toolchain find fix" || true
+          git commit -m "Build update: OpenWrt toolchain with STAGING_DIR and dynamic musl" || true
           git push -f origin release-mips
