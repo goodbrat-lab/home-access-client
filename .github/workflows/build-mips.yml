@@ -15,17 +15,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout home-access-client
+        uses: actions/checkout@v4
+
       - name: Checkout wstunnel repo
         uses: actions/checkout@v4
         with:
           repository: 'erebe/wstunnel'
           ref: 'v11.1.0'
-          path: wstunnel-src
-
-      - name: Checkout home-access-client repo
-        uses: actions/checkout@v4
-        with:
-          path: my-repo
+          path: wstunnel
 
       - name: Install cross and upx
         run: |
@@ -34,19 +32,18 @@ jobs:
 
       - name: Build with cross
         run: |
-          cd wstunnel-src
-          cross build --target mipsel-unknown-linux-musl --release --package wstunnel-cli > ../my-repo/build.log 2>&1 || true
-          if [ -f target/mipsel-unknown-linux-musl/release/wstunnel ]; then
-            cp target/mipsel-unknown-linux-musl/release/wstunnel ../my-repo/wstunnel-mipsel
-            upx --best --lzma ../my-repo/wstunnel-mipsel -o ../my-repo/wstunnel-mipsel-upx || true
-          fi
+          cd wstunnel
+          cross build --target mipsel-unknown-linux-musl --release --package wstunnel-cli
+          cp target/mipsel-unknown-linux-musl/release/wstunnel ../wstunnel-mipsel
+          cd ..
+          upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
+          ls -lh wstunnel-mipsel*
 
-      - name: Push output to debug-log branch
+      - name: Commit and push binary to release-mips branch
         run: |
-          cd my-repo
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git checkout -B debug-log
-          git add -f build.log wstunnel-mipsel wstunnel-mipsel-upx || true
-          git commit -m "Upload build log and binary" || true
-          git push -f origin debug-log
+          git checkout -B release-mips
+          git add -f wstunnel-mipsel wstunnel-mipsel-upx
+          git commit -m "Add compiled MIPS wstunnel binaries"
+          git push -f origin release-mips
