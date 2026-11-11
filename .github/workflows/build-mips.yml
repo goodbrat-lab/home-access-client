@@ -25,14 +25,16 @@ jobs:
 
       - name: Compile with cross
         run: |
-          cross build --target mipsel-unknown-linux-musl --release --package wstunnel-cli
+          cross build --target mipsel-unknown-linux-musl --release --package wstunnel-cli 2>&1 | tee build.log
           cp target/mipsel-unknown-linux-musl/release/wstunnel wstunnel-mipsel
           upx --best --lzma wstunnel-mipsel -o wstunnel-mipsel-upx || true
 
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: wstunnel-mipsel-binaries
+          name: build-artifacts-and-logs
           path: |
             wstunnel-mipsel
             wstunnel-mipsel-upx
+            build.log
