@@ -17,13 +17,6 @@ jobs:
       image: rust:1.82-bookworm
 
     steps:
-      - name: Checkout wstunnel repo
-        uses: actions/checkout@v4
-        with:
-          repository: 'erebe/wstunnel'
-          ref: 'v11.1.0'
-          path: wstunnel
-
       - name: Checkout home-access-client
         uses: actions/checkout@v4
         with:
@@ -31,28 +24,19 @@ jobs:
 
       - name: Install compiler
         run: |
-          apt-get update
-          apt-get install -y gcc-mipsel-linux-gnu libc6-dev-mipsel-cross
-          rustup target add mipsel-unknown-linux-gnu
+          apt-get update > /tmp/err.log 2>&1
+          apt-get install -y gcc-mipsel-linux-gnu libc6-dev-mipsel-cross >> /tmp/err.log 2>&1 || true
+          rustup target add mipsel-unknown-linux-gnu >> /tmp/err.log 2>&1 || true
 
-      - name: Build static binary
-        env:
-          CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_GNU_LINKER: mipsel-linux-gnu-gcc
-          RUSTFLAGS: "-C target-feature=+crt-static -C link-arg=-static"
-        run: |
-          cd wstunnel
-          cargo build --release --target mipsel-unknown-linux-gnu --package wstunnel-cli
-          cp target/mipsel-unknown-linux-gnu/release/wstunnel ../output-repo/wstunnel-mipsel
-          cd ../output-repo
-          ls -lh wstunnel-mipsel
-
-      - name: Push to release-mips branch
+      - name: Push error log
+        if: always()
         run: |
           cd output-repo
           git config --global --add safe.directory "*"
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git checkout -B release-mips
-          git add -f wstunnel-mipsel
-          git commit -m "Add compiled static MIPS wstunnel binary"
+          cp /tmp/err.log ./err.log || true
+          git add -f err.log
+          git commit -m "Capture 1.82 error log" || true
           git push -f origin release-mips
