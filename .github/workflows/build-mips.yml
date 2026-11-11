@@ -10,6 +10,8 @@ jobs:
   build:
     name: Cross-compile wstunnel v11.1.0 for mipsel
     runs-on: ubuntu-latest
+    container:
+      image: rust:bullseye
 
     steps:
       - name: Checkout official wstunnel repo
@@ -18,22 +20,22 @@ jobs:
           repository: 'erebe/wstunnel'
           ref: 'v11.1.0'
 
-      - name: Compile static binary in Debian Docker
+      - name: Install cross compiler
         run: |
-          docker run --rm -v ${{ github.workspace }}:/app -w /app rust:1-bullseye bash -c "
-            set -ex
-            apt-get update && apt-get install -y musl-tools gcc-mipsel-linux-gnu upx-ucl
-            rustup target add mipsel-unknown-linux-musl
-            export CC_mipsel_unknown_linux_musl=mipsel-linux-gnu-gcc
-            export CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_MUSL_LINKER=mipsel-linux-gnu-gcc
-            cargo build --release --target mipsel-unknown-linux-musl --package wstunnel-cli
-            
-            cp target/mipsel-unknown-linux-musl/release/wstunnel /app/wstunnel-mipsel
-            upx --best --lzma /app/wstunnel-mipsel -o /app/wstunnel-mipsel-upx || true
-          "
+          apt-get update
+          apt-get install -y musl-tools gcc-mipsel-linux-gnu upx-ucl
+          rustup target add mipsel-unknown-linux-musl
+
+      - name: Build wstunnel
+        env:
+          CC_mipsel_unknown_linux_musl: mipsel-linux-gnu-gcc
+          CARGO_TARGET_MIPSEL_UNKNOWN_LINUX_MUSL_LINKER: mipsel-linux-gnu-gcc
+        run: |
+          cargo build --release --target mipsel-unknown-linux-musl --package wstunnel-cli
+          cp target/mipsel-unknown-linux-musl/release/wstunnel ./wstunnel-mipsel
+          upx --best --lzma ./wstunnel-mipsel -o ./wstunnel-mipsel-upx || true
 
       - name: Upload artifacts
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: wstunnel-mipsel-binaries
