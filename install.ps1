@@ -1,4 +1,4 @@
-# ====================================================================
+﻿# ====================================================================
 # Automated Installer: Secure Remote Access Client (wstunnel + WireGuard)
 # Repository: https://github.com/goodbrat-lab/home-access-client
 # ====================================================================
@@ -227,7 +227,7 @@ try {
     if (-not [string]::IsNullOrWhiteSpace($currentOverride)) {
         [System.IO.File]::WriteAllText("$targetDir\proxy-override-backup.txt", $currentOverride)
     }
-    $bypassList = "192.168.1.*;10.10.10.*;*.youtube.com;*.googlevideo.com;*.ytimg.com"
+    $bypassList = "192.168.1.*;10.10.10.*;*.youtube.com;*.googlevideo.com;*.ytimg.com;*.autodesk.com;*.autodesk.net;*.autodesk360.com;*.autocad.com;*.pingidentity.com;*.web-platform.io;*.launchdarkly.com;*.optimizely.com;*.chatgpt.com;*.openai.com;*.claude.ai"
     $newOverride = if ([string]::IsNullOrWhiteSpace($currentOverride)) {
         $bypassList
     } else {
